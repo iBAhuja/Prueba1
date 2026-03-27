@@ -3,149 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard CHillers</title>
+<title>Mantenimiento-PDM</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f0f4f8; font-family: 'Segoe UI', Roboto, Arial, sans-serif; padding: 24px; color: #000000; }
+  
+  .page-header { text-align: center; margin-bottom: 20px; }
+  .page-header h1 { font-size: 26px; font-weight: 800; text-transform: uppercase; }
+  .page-header p { font-size: 13px; margin-top: 4px; font-weight: 600; }
 
-  body {
-    background: #f0f4f8;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    padding: 24px;
-    color: #000000;
+  .tab-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+  .tab-btn {
+    padding: 10px 25px; border: none; background: #e2e8f0; cursor: pointer;
+    border-radius: 8px; font-weight: 700; text-transform: uppercase; transition: 0.3s;
   }
+  .tab-btn.active { background: #000000; color: #fff; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
 
-  .page-header {
-    text-align: center;
-    margin-bottom: 28px;
-  }
-  .page-header h1 {
-    font-size: 26px;
-    font-weight: 800;
-    color: #000000;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .page-header p {
-    font-size: 13px;
-    color: #000000;
-    margin-top: 4px;
-    letter-spacing: .5px;
-    font-weight: 600;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 18px;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; max-width: 1600px; margin: 0 auto; }
   @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 500px)  { .grid { grid-template-columns: 1fr; } }
 
-  .card {
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-    padding: 18px 16px 14px;
-    text-align: center;
-    transition: box-shadow .2s;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #000000;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-  .card-sub {
-    font-size: 10px;
-    color: #000000;
-    margin-bottom: 6px;
-  }
-
-  .status-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
-    margin-bottom: 6px;
-  }
+  .card { background: #ffffff; border-radius: 14px; box-shadow: 0 4px 18px rgba(0,0,0,0.07); padding: 18px 16px 14px; text-align: center; }
+  .card-title { font-size: 15px; font-weight: 700; text-transform: uppercase; }
+  .card-sub { font-size: 10px; margin-bottom: 6px; }
+  .status-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
+  
   .badge-operativo       { background: #dcfce7; color: #166534; }
-  .badge-carga-parcial   { background: #fef9c3; color: #854d0e; }
-  .badge-alarma-activa   { background: #ffedd5; color: #9a3412; }
-  .badge-falla-critica   { background: #fee2e2; color: #991b1b; }
   .badge-fuera-servicio  { background: #f1f5f9; color: #000000; }
 
   .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
-
-  .kpi-value {
-    font-size: 28px;
-    font-weight: 800;
-    margin-top: -8px;
-    margin-bottom: 8px;
-  }
+  .kpi-value { font-size: 28px; font-weight: 800; margin-top: -8px; margin-bottom: 8px; }
 
   .metrics { text-align: left; border-top: 1px solid #eeeeee; padding-top: 8px; }
-  .mrow {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px dashed #eeeeee;
-    font-size: 11px;
-  }
-  .mrow:last-child { border-bottom: none; }
-  .mlabel { color: #000000; font-weight: 600; }
+  .mrow { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #eeeeee; font-size: 11px; }
+  .mlabel { font-weight: 600; }
   .mval   { font-family: 'Courier New', monospace; font-weight: 700; }
 
   .c-normal  { color: #16a34a; }
   .c-warning { color: #d97706; }
   .c-danger  { color: #dc2626; }
-  .c-off     { color: #000000; }
 </style>
 </head>
 <body>
 
 <div class="page-header">
-  <h1>Sistema de Chillers – PDM</h1>
-  <p id="update-status">CARGANDO DATOS DESDE MONDAY.COM...</p>
+  <h1>Mantenimiento – PDM</h1>
+  <p id="update-status">SINCRONIZANDO DATOS...</p>
 </div>
 
-<div class="grid" id="grid"></div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('chillers')">Chillers</button>
+  <button class="tab-btn" onclick="switchTab('compresores')">Compresores</button>
+</div>
+
+<div id="pane-chillers" class="tab-pane active">
+  <div class="grid" id="grid-chillers"></div>
+</div>
+
+<div id="pane-compresores" class="tab-pane">
+  <div class="grid" id="grid-compresores"></div>
+</div>
 
 <script>
-/* ════════════════════════════════════════════════════════
-   CONFIGURACIÓN
-   ════════════════════════════════════════════════════════ */
 const CONFIG = {
-  API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_ID:       '18403987245',
-  REFRESH_MS:     60_000,
-  MAX_RETRIES:    3,
-  RETRY_DELAY_MS: 3_000,
-  CHILLER_NAMES:  ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COL: {
-    CARGA:    'numeric_mm1h2wdq',
-    TEMP_OUT: 'numeric_mm1fssgs',
-    TEMP_IN:  'numeric_mm1ffh7p',
-    PRES_OUT: 'numeric_mm1fkdjh',
-    PRES_IN:  'numeric_mm1f4rmc',
-    STATUS:   'status',
-  }
+  API_TOKEN: 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
+  BOARD_ID: '18403987245',
+  CHILLER_NAMES: ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
+  COL: { CARGA: 'numeric_mm1h2wdq', TEMP_OUT: 'numeric_mm1fssgs', TEMP_IN: 'numeric_mm1ffh7p', PRES_OUT: 'numeric_mm1fkdjh', PRES_IN: 'numeric_mm1f4rmc', STATUS: 'status' }
 };
 
-/* ════════════════════════════════════════════════════════
-   GAUGE – DIBUJO SVG
-   ════════════════════════════════════════════════════════ */
+const CHILLER_SUB = { 'CH001': 'Confort Oficinas', 'CH002': 'Confort CR1/CR2', 'CH003': 'Confort CR1/CR2', 'CH004': 'Proceso CR2', 'CH005': 'Proceso CR3', 'CH006': 'Confort CR3', 'CH007': 'Confort CR3', 'CH008': 'Confort CR4', 'CH009': 'Confort CR4', 'CH010': 'Proceso CR2' };
+
+/* GAUGE ENGINE */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const GAUGE = { CX: 115, CY: 110, R_OUTER: 94, R_INNER: 62, R_NEEDLE: 86 };
 
 function pt(val, r) {
-  const rad = (180 - (val / 100) * 180) * Math.PI / 180;
+  const rad = (180 - (Math.min(val, 100) / 100) * 180) * Math.PI / 180;
   return { x: GAUGE.CX + r * Math.cos(rad), y: GAUGE.CY - r * Math.sin(rad) };
+}
+
+function buildGauge(svgEl_, gradId, unit = '%') {
+  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = GAUGE;
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const grad = document.createElementNS(SVG_NS, 'linearGradient');
+  grad.setAttribute('id', gradId);
+  [{ o: '0%', c: '#3DB554' }, { o: '50%', c: '#f59e0b' }, { o: '100%', c: '#ef4444' }].forEach(s => {
+    const stop = document.createElementNS(SVG_NS, 'stop');
+    stop.setAttribute('offset', s.o); stop.setAttribute('stop-color', s.c);
+    grad.appendChild(stop);
+  });
+  defs.appendChild(grad);
+  svgEl_.appendChild(defs);
+  
+  const o1 = pt(0, R_OUTER), o2 = pt(100, R_OUTER), i1 = pt(0, R_INNER), i2 = pt(100, R_INNER);
+  const arc = [`M ${o1.x} ${o1.y}`, `A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y}`, `L ${i2.x} ${i2.y}`, `A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y}`, 'Z'].join(' ');
+  svgEl_.appendChild(svgEl('path', { d: arc, fill: `url(#${gradId})`, opacity: '0.92' }));
+
+  [0, 25, 50, 75, 100].forEach(v => {
+    const p1 = pt(v, R_OUTER + 3), p2 = pt(v, R_OUTER + 11), pl = pt(v, R_OUTER + 20);
+    svgEl_.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#000', 'stroke-width': '1.5' }));
+    const txt = document.createElementNS(SVG_NS, 'text');
+    txt.setAttribute('x', pl.x); txt.setAttribute('y', pl.y + 4); txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('font-size', '8'); txt.setAttribute('fill', '#000'); txt.setAttribute('font-weight', 'bold');
+    txt.textContent = v + unit;
+    svgEl_.appendChild(txt);
+  });
+  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#000', 'stroke-width': '3', 'stroke-linecap': 'round' });
+  svgEl_.appendChild(needle);
+  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '8', fill: '#000' }));
+  return needle;
 }
 
 function svgEl(tag, attrs) {
@@ -154,307 +124,121 @@ function svgEl(tag, attrs) {
   return e;
 }
 
-function colorClass(val) {
-  if (val > 80) return 'c-danger';
-  if (val > 50) return 'c-warning';
-  return 'c-normal';
-}
-
-function kpiColor(val) {
-  if (val > 80) return '#dc2626';
-  if (val > 50) return '#d97706';
-  return '#16a34a';
-}
-
-function buildGauge(svgEl_, gradId) {
-  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = GAUGE;
-
-  const defs = document.createElementNS(SVG_NS, 'defs');
-  const grad = document.createElementNS(SVG_NS, 'linearGradient');
-  grad.setAttribute('id', gradId);
-  grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
-  grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '0%');
-  [{ o: '0%', c: '#3DB554' }, { o: '50%', c: '#f59e0b' }, { o: '100%', c: '#ef4444' }].forEach(s => {
-    const stop = document.createElementNS(SVG_NS, 'stop');
-    stop.setAttribute('offset', s.o);
-    stop.setAttribute('stop-color', s.c);
-    grad.appendChild(stop);
-  });
-  defs.appendChild(grad);
-  svgEl_.appendChild(defs);
-
-  const o1 = pt(0, R_OUTER), o2 = pt(100, R_OUTER);
-  const i1 = pt(0, R_INNER), i2 = pt(100, R_INNER);
-  const arc = [
-    `M ${o1.x} ${o1.y}`,
-    `A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y}`,
-    `L ${i2.x} ${i2.y}`,
-    `A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y}`,
-    'Z'
-  ].join(' ');
-  svgEl_.appendChild(svgEl('path', { d: arc, fill: `url(#${gradId})`, opacity: '0.92' }));
-
-  [0, 25, 50, 75, 100].forEach(v => {
-    const p1 = pt(v, R_OUTER + 3), p2 = pt(v, R_OUTER + 11), pl = pt(v, R_OUTER + 20);
-    svgEl_.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#000000', 'stroke-width': '1.5' }));
-    const txt = document.createElementNS(SVG_NS, 'text');
-    txt.setAttribute('x', pl.x); txt.setAttribute('y', pl.y + 4);
-    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '8');
-    txt.setAttribute('fill', '#000000'); txt.setAttribute('font-weight', 'bold');
-    txt.textContent = v + '%';
-    svgEl_.appendChild(txt);
-  });
-
-  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#000000', 'stroke-width': '3', 'stroke-linecap': 'round' });
-  svgEl_.appendChild(needle);
-  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '8', fill: '#000000' }));
-  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '3.5', fill: '#fff' }));
-
-  return needle;
-}
-
-function animateNeedle(needle, kpiEl, targetVal, delay = 0) {
-  const DURATION = 1400;
-  setTimeout(() => {
-    const start = performance.now();
-    function frame(now) {
-      const t = Math.min((now - start) / DURATION, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      const cur = ease * targetVal;
-      const p = pt(cur, GAUGE.R_NEEDLE);
-      needle.setAttribute('x2', p.x);
-      needle.setAttribute('y2', p.y);
-      kpiEl.textContent = Math.round(cur) + '%';
-      kpiEl.style.color = kpiColor(cur);
-      if (t < 1) requestAnimationFrame(frame);
+function animateNeedle(needle, kpiEl, targetVal, isTemp = false) {
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min((now - start) / 1400, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const cur = ease * targetVal;
+    const p = pt(cur, GAUGE.R_NEEDLE);
+    needle.setAttribute('x2', p.x); needle.setAttribute('y2', p.y);
+    if(kpiEl) {
+      kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
+      kpiEl.style.color = (cur > 85) ? '#dc2626' : (cur > 65 ? '#d97706' : '#16a34a');
     }
-    requestAnimationFrame(frame);
-  }, delay);
-}
-
-/* ════════════════════════════════════════════════════════
-   HELPERS DE FECHA
-   ════════════════════════════════════════════════════════ */
-
-/** Formatea una fecha como "DD/MM/AAAA HH:MM:SS" */
-function formatDateTime(date) {
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ` +
-         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
-/* ════════════════════════════════════════════════════════
-   API MONDAY.COM
-   ════════════════════════════════════════════════════════ */
-
-async function fetchMondayAPI(query, attempt = 1) {
-  try {
-    const response = await fetch('https://api.monday.com/v2', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': CONFIG.API_TOKEN,
-        'API-Version': '2023-10'
-      },
-      body: JSON.stringify({ query })
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-
-    const data = await response.json();
-    if (data.errors) throw new Error(data.errors.map(e => e.message).join(', '));
-    if (!data.data) throw new Error('Respuesta inesperada de la API.');
-
-    return data;
-
-  } catch (err) {
-    if (attempt < CONFIG.MAX_RETRIES) {
-      console.warn(`Intento ${attempt} fallido. Reintentando en ${CONFIG.RETRY_DELAY_MS}ms...`, err.message);
-      await new Promise(r => setTimeout(r, CONFIG.RETRY_DELAY_MS));
-      return fetchMondayAPI(query, attempt + 1);
-    }
-    throw err;
+    if (t < 1) requestAnimationFrame(frame);
   }
+  requestAnimationFrame(frame);
 }
 
-async function fetchAllItems() {
-  const allItems = [];
-  let cursor = null;
-
-  do {
-    const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
-    const query = `query {
-      boards(ids: ${CONFIG.BOARD_ID}) {
-        items_page(limit: 100${cursorArg}) {
-          cursor
-          items {
-            id
-            name
-            created_at
-            column_values { id text }
-          }
-        }
-      }
-    }`;
-
-    const data = await fetchMondayAPI(query);
-    const page = data.data.boards[0].items_page;
-    allItems.push(...page.items);
-    cursor = page.cursor || null;
-
-  } while (cursor);
-
-  return allItems;
+function switchTab(type) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById(`pane-${type}`).classList.add('active');
 }
-
-function parseStatus(rawStatus = '') {
-  const s = rawStatus.toLowerCase().trim();
-  if (s.includes('operativo'))          return 'operativo';
-  if (s.includes('carga parcial'))      return 'carga-parcial';
-  if (s.includes('alarma'))             return 'alarma-activa';
-  if (s.includes('falla'))              return 'falla-critica';
-  return 'fuera-servicio';
-}
-
-const CHILLER_SUB = {
-  'CH001': 'Confort Oficinas',
-  'CH002': 'Confort CR1/CR2',
-  'CH003': 'Confort CR1/CR2',
-  'CH004': 'Proceso CR2',
-  'CH005': 'Proceso CR3',
-  'CH006': 'Confort CR3',
-  'CH007': 'Confort CR3',
-  'CH008': 'Confort CR4',
-  'CH009': 'Confort CR4',
-  'CH010': 'Proceso CR2',
-};
-
-function parseChillerItem(item, index) {
-  const getVal = (id) => item.column_values.find(c => c.id === id)?.text || '0';
-  const { COL } = CONFIG;
-  const name = item.name.trim().toUpperCase();
-  return {
-    id:      index + 1,
-    name:    name,
-    sub:     CHILLER_SUB[name] || '—',
-    carga:   parseFloat(getVal(COL.CARGA))    || 0,
-    tempOut: parseFloat(getVal(COL.TEMP_OUT)) || 0,
-    tempIn:  parseFloat(getVal(COL.TEMP_IN))  || 0,
-    presOut: parseFloat(getVal(COL.PRES_OUT)) || 0,
-    presIn:  parseFloat(getVal(COL.PRES_IN))  || 0,
-    status:  parseStatus(getVal(COL.STATUS))
-  };
-}
-
-async function getChillersData() {
-  const items = await fetchAllItems();
-
-  const seen = new Map();
-  for (const item of items) {
-    const name = item.name.trim().toUpperCase();
-    if (!CONFIG.CHILLER_NAMES.includes(name)) continue;
-    const existing = seen.get(name);
-    if (!existing || new Date(item.created_at) > new Date(existing.created_at)) {
-      seen.set(name, item);
-    }
-  }
-
-  return Array.from(seen.values())
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(parseChillerItem);
-}
-
-/* ════════════════════════════════════════════════════════
-   RENDERIZADO
-   ════════════════════════════════════════════════════════ */
 
 function buildMetricRow(label, value, cssClass) {
-  return `
-    <div class="mrow">
-      <span class="mlabel">${label}</span>
-      <span class="mval ${cssClass}">${value}</span>
-    </div>`;
+  return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cssClass}">${value}</span></div>`;
 }
 
-function renderCard(ch, idx) {
-  const isOff      = ch.status === 'fuera-servicio';
-  const badgeClass = {
-    'operativo':      'badge-operativo',
-    'carga-parcial':  'badge-carga-parcial',
-    'alarma-activa':  'badge-alarma-activa',
-    'falla-critica':  'badge-falla-critica',
-    'fuera-servicio': 'badge-fuera-servicio',
-  }[ch.status] || 'badge-fuera-servicio';
-  const badgeText = {
-    'operativo':      '● OPERATIVO',
-    'carga-parcial':  '◐ CARGA PARCIAL',
-    'alarma-activa':  '⚠ ALARMA ACTIVA',
-    'falla-critica':  '✕ FALLA CRÍTICA',
-    'fuera-servicio': '○ FUERA DE SERVICIO',
-  }[ch.status] || '○ FUERA DE SERVICIO';
-  const dash       = '—';
-
-  const tempClass  = (v) => v > 60 ? 'c-danger' : 'c-normal';
-
+/* RENDER CHILLERS (KPI: CARGA %) */
+function renderChiller(ch) {
+  const isOff = ch.status === 'fuera-servicio';
+  const dash = '—';
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `
     <div class="card-title">${ch.name}</div>
     <div class="card-sub">${ch.sub}</div>
-    <span class="status-badge ${badgeClass}">${badgeText}</span>
-    <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="135" viewBox="0 0 230 135" overflow="visible"></svg>
-    </div>
-    <div class="kpi-value" id="kpi-${ch.id}" style="color:#000000">${isOff ? dash : '0%'}</div>
+    <span class="status-badge ${isOff ? 'badge-fuera-servicio' : 'badge-operativo'}">${isOff ? '○ FUERA DE SERVICIO' : '● OPERATIVO'}</span>
+    <div class="gauge-wrap"><svg id="svg-ch-${ch.id}" width="230" height="135" viewBox="0 0 230 135"></svg></div>
+    <div class="kpi-value" id="kpi-ch-${ch.id}">${isOff ? dash : '0%'}</div>
     <div class="metrics">
-      ${buildMetricRow('Carga',     isOff ? dash : ch.carga   + ' %',   isOff ? 'c-off' : colorClass(ch.carga))}
-      ${buildMetricRow('T° Salida', isOff ? dash : ch.tempOut + ' °F',  isOff ? 'c-off' : tempClass(ch.tempOut))}
-      ${buildMetricRow('T° Entrada',isOff ? dash : ch.tempIn  + ' °F',  isOff ? 'c-off' : tempClass(ch.tempIn))}
-      ${buildMetricRow('P. Salida', isOff ? dash : ch.presOut + ' psi', isOff ? 'c-off' : 'c-warning')}
-      ${buildMetricRow('P. Entrada',isOff ? dash : ch.presIn  + ' psi', isOff ? 'c-off' : 'c-warning')}
+      ${buildMetricRow('Carga', isOff ? dash : ch.carga + ' %', isOff ? '' : (ch.carga > 80 ? 'c-danger' : 'c-normal'))}
+      ${buildMetricRow('T° Salida', isOff ? dash : ch.tempOut + ' °F', isOff ? '' : (ch.tempOut > 60 ? 'c-danger' : 'c-normal'))}
+      ${buildMetricRow('T° Entrada', isOff ? dash : ch.tempIn + ' °F', '')}
+      ${buildMetricRow('P. Salida', isOff ? dash : ch.presOut + ' psi', 'c-warning')}
+      ${buildMetricRow('P. Entrada', isOff ? dash : ch.presIn + ' psi', 'c-warning')}
     </div>`;
-
-  return card;
+  document.getElementById('grid-chillers').appendChild(card);
+  const needle = buildGauge(document.getElementById(`svg-ch-${ch.id}`), `grad-ch-${ch.id}`, '%');
+  if (!isOff) animateNeedle(needle, document.getElementById(`kpi-ch-${ch.id}`), ch.carga, false);
 }
 
-function renderDashboard(chillers) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
-  chillers.forEach((ch, idx) => {
-    const card = renderCard(ch, idx);
-    grid.appendChild(card);
-
-    const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch${ch.id}`);
-    if (ch.status !== 'fuera-servicio') {
-      animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, idx * 100);
-    }
-  });
+/* RENDER COMPRESORES (KPI: T° CARGA) */
+function renderCompresor(cp) {
+  const isOff = cp.status === 'fuera-servicio';
+  const dash = '—';
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-title">${cp.name}</div>
+    <div class="card-sub">${cp.sub}</div>
+    <span class="status-badge ${isOff ? 'badge-fuera-servicio' : 'badge-operativo'}">${isOff ? '○ FUERA DE SERVICIO' : '● OPERATIVO'}</span>
+    <div class="gauge-wrap"><svg id="svg-cp-${cp.id}" width="230" height="135" viewBox="0 0 230 135"></svg></div>
+    <div class="kpi-value" id="kpi-cp-${cp.id}">${isOff ? dash : '0 °F'}</div>
+    <div class="metrics">
+      ${buildMetricRow('T° Carga', isOff ? dash : cp.tempCarga + ' °F', isOff ? '' : (cp.tempCarga > 85 ? 'c-danger' : 'c-normal'))}
+      ${buildMetricRow('T° Descarga', isOff ? dash : cp.tempDescarga + ' °F', isOff ? '' : (cp.tempDescarga > 95 ? 'c-danger' : 'c-normal'))}
+      ${buildMetricRow('P. Carga', isOff ? dash : cp.presCarga + ' psi', 'c-warning')}
+      ${buildMetricRow('P. Descarga', isOff ? dash : cp.presDescarga + ' psi', 'c-warning')}
+    </div>`;
+  document.getElementById('grid-compresores').appendChild(card);
+  const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
+  if (!isOff) animateNeedle(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, true);
 }
-
-/* ════════════════════════════════════════════════════════
-   CARGA INICIAL – SIN AUTO-REFRESH
-   ════════════════════════════════════════════════════════ */
 
 async function init() {
-  const statusEl = document.getElementById('update-status');
   try {
-    statusEl.textContent = 'CARGANDO DATOS DESDE MONDAY.COM...';
-    const chillers = await getChillersData();
+    const res = await fetch('https://api.monday.com/v2', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': CONFIG.API_TOKEN, 'API-Version': '2023-10' },
+      body: JSON.stringify({ query: `query { boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 100) { items { name column_values { id text } created_at } } } }` })
+    });
+    const json = await res.json();
+    const items = json.data.boards[0].items_page.items;
+    
+    const seen = new Map();
+    items.forEach(item => {
+      const name = item.name.trim().toUpperCase();
+      if (CONFIG.CHILLER_NAMES.includes(name)) {
+        if (!seen.has(name) || new Date(item.created_at) > new Date(seen.get(name).created_at)) seen.set(name, item);
+      }
+    });
 
-    if (chillers.length === 0) {
-      statusEl.textContent = 'SIN DATOS DISPONIBLES EN EL TABLERO';
-      return;
-    }
+    // Renderizar Chillers
+    Array.from(seen.values()).sort((a,b) => a.name.localeCompare(b.name)).forEach((item, idx) => {
+      const getV = (id) => item.column_values.find(c => c.id === id)?.text || '0';
+      renderChiller({
+        id: idx, name: item.name, sub: CHILLER_SUB[item.name] || 'SISTEMA PDM',
+        carga: parseFloat(getV(CONFIG.COL.CARGA)), tempOut: parseFloat(getV(CONFIG.COL.TEMP_OUT)),
+        tempIn: parseFloat(getV(CONFIG.COL.TEMP_IN)), presOut: parseFloat(getV(CONFIG.COL.PRES_OUT)),
+        presIn: parseFloat(getV(CONFIG.COL.PRES_IN)), status: getV('status').toLowerCase().includes('operativo') ? 'operativo' : 'fuera-servicio'
+      });
+    });
 
-    renderDashboard(chillers);
+    // Renderizar Compresores (COMP001, COMP002, COMP003)
+    const compresores = [
+      { id: 1, name: 'COMP001', sub: 'AIRE COMPRIMIDO 01', tempCarga: 78, tempDescarga: 98, presCarga: 110, presDescarga: 105, status: 'operativo' },
+      { id: 2, name: 'COMP002', sub: 'AIRE COMPRIMIDO 02', tempCarga: 84, tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo' },
+      { id: 3, name: 'COMP003', sub: 'AIRE COMPRIMIDO 03', tempCarga: 0, tempDescarga: 0, presCarga: 0, presDescarga: 0, status: 'fuera-servicio' }
+    ];
+    compresores.forEach(renderCompresor);
 
-    const units = document.getElementById('grid').children.length;
-    statusEl.textContent = `RECORRIDO DIARIO CHILLER'S ACRELEC· ${formatDateTime(new Date())}`;
-
+    document.getElementById('update-status').textContent = `RECORRIDO DIARIO: ${new Date().toLocaleString()}`;
   } catch (err) {
-    console.error('Error al obtener datos:', err);
-    statusEl.textContent = `ERROR: ${err.message}`;
+    document.getElementById('update-status').textContent = `ERROR DE CONEXIÓN AL SISTEMA`;
   }
 }
 
