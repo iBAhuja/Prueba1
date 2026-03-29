@@ -3,350 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento PDM</title>
+<title>Mantenimiento PDM | Medline Style</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --primary:      #0079F2;
-    --primary-dark: #005EC2;
-    --primary-light:#E8F1FD;
-    --success:      #00C875;
-    --success-bg:   #E6FAF3;
-    --warning:      #FFCB00;
-    --warning-bg:   #FFF9E0;
-    --danger:       #E2445C;
-    --danger-bg:    #FDEEF1;
-    --neutral:      #676879;
-    --neutral-light:#C5C7D4;
-    --bg:           #F5F6FA;
-    --surface:      #FFFFFF;
-    --border:       #E6E9EF;
-    --text-primary: #323338;
-    --text-secondary:#676879;
-    --text-muted:   #C5C7D4;
-    --font:         'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --radius:       12px;
-    --shadow-sm:    0 1px 4px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
-    --shadow-md:    0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
-    --shadow-hover: 0 8px 24px rgba(0,121,242,0.14), 0 2px 8px rgba(0,0,0,0.06);
+    /* --- PALETA MEDLINE --- */
+    --primary:       #004F9F; 
+    --primary-dark:  #003D7C; 
+    --primary-light: #E6F0F9; 
+    --success:       #00A859; 
+    --success-bg:    #E6F6EF;
+    --warning:       #FFB800; 
+    --warning-bg:    #FFF8E6;
+    --danger:        #D93025; 
+    --danger-bg:     #FCEAE9;
+    --neutral:       #676879;
+    --neutral-light: #C5C7D4;
+    --bg:            #F9FAFB; 
+    --surface:       #FFFFFF; 
+    --border:        #E6E9EF; 
+    --text-primary:  #323338; 
+    --text-secondary:#676879; 
+    --text-muted:    #C5C7D4; 
+    --font:          'Inter', sans-serif;
+    --radius:        12px;
+    --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
+    --shadow-hover:  0 8px 24px rgba(0,79,159,0.14);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    font-family: var(--font);
-    color: var(--text-primary);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
   /* ── TOPBAR ── */
   .topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
     box-shadow: var(--shadow-sm);
   }
-
   .topbar-inner {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 24px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    max-width: 1600px; margin: 0 auto; padding: 0 24px;
+    height: 60px; display: flex; align-items: center; justify-content: space-between;
   }
-
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
+  .topbar-brand { display: flex; align-items: center; gap: 10px; }
   .brand-icon {
-    width: 34px; height: 34px;
-    background: var(--primary);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
-    flex-shrink: 0;
+    width: 34px; height: 34px; background: var(--primary);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: #fff;
   }
-
-  .brand-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.2px;
-  }
-
+  .brand-name { font-size: 15px; font-weight: 700; }
   .brand-name span { color: var(--primary); }
 
   .sync-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; font-weight: 500; color: var(--text-secondary);
   }
-
   .sync-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--success);
-    flex-shrink: 0;
-    animation: blink 2s ease-in-out infinite;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--success); animation: blink 2s infinite;
   }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
-  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
   /* ── CONTENT ── */
-  .content {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 24px 24px 40px;
-  }
+  .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
 
-  /* ── TABS ── */
   .tab-nav {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 4px;
-    width: fit-content;
-    box-shadow: var(--shadow-sm);
+    display: flex; gap: 4px; margin-bottom: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px; width: fit-content;
   }
-
   .tab-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 20px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    border-radius: 7px;
-    transition: all 0.18s ease;
+    display: flex; align-items: center; gap: 7px; padding: 8px 20px;
+    border: none; background: transparent; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    border-radius: 7px; transition: 0.18s;
   }
+  .tab-btn.active { background: var(--primary); color: #fff; }
 
-  .tab-btn:hover:not(.active) {
-    background: var(--bg);
-    color: var(--text-primary);
-  }
-
-  .tab-btn.active {
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(0,121,242,0.30);
-  }
-
-  .tab-icon { font-size: 14px; }
-
-  /* ── SECTION HEADER ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.2px;
-  }
-
+  .section-header { display: flex; align-items: center; margin-bottom: 16px; }
+  .section-title { font-size: 16px; font-weight: 700; }
   .section-count {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2px 9px;
-    margin-left: 10px;
+    font-size: 11px; font-weight: 500; color: var(--text-secondary);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2px 9px; margin-left: 10px;
   }
 
-  /* ── PANES ── */
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  /* ── GRID ── */
+  /* ── GRID & CARDS ── */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
   }
-
-  @media (max-width: 1300px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 460px)  { .grid { grid-template-columns: 1fr; } }
-
-  /* ── CARD ── */
   .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 18px 16px 15px;
-    text-align: center;
-    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    overflow: hidden;
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 18px 16px 15px;
+    transition: 0.2s; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden; text-align: center;
   }
-
-  /* Left color bar instead of top — matches Fracttal asset status sidebar */
   .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 4px;
-    background: var(--primary);
-    border-radius: var(--radius) 0 0 var(--radius);
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+    width: 4px; background: var(--primary);
   }
-
   .card.card-off::before { background: var(--neutral-light); }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
-  .card:hover {
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(0,121,242,0.22);
-    transform: translateY(-2px);
-  }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  .card-sub { font-size: 10px; color: var(--text-secondary); }
 
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    text-align: left;
-    padding-left: 4px;
-  }
-
-  .card-title-wrap { flex: 1; min-width: 0; }
-
-  .card-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.1px;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .card-sub {
-    font-size: 10px;
-    color: var(--text-secondary);
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* ── BADGE ── */
   .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 9px;
-    font-weight: 600;
-    padding: 3px 7px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-left: 6px;
-    letter-spacing: 0.2px;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 600; padding: 3px 7px; border-radius: 20px;
   }
+  .badge-operativo { background: var(--success-bg); color: #007D43; }
+  .badge-fuera-servicio { background: var(--danger-bg); color: #B9251C; }
 
-  .badge-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
+  .kpi-value { font-size: 26px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
+  .kpi-off { color: var(--text-muted); font-size: 22px; }
 
-  .badge-operativo      { background: var(--success-bg); color: #007A4D; }
-  .badge-operativo      .badge-dot { background: var(--success); }
-  .badge-fuera-servicio { background: var(--danger-bg);  color: #B5002E; }
-  .badge-fuera-servicio .badge-dot { background: var(--danger); }
-
-  /* ── GAUGE ── */
-  .gauge-wrap {
-    display: flex;
-    justify-content: center;
-    margin: 4px 0 0;
-  }
-
-  /* ── KPI ── */
-  .kpi-value {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: -1px;
-    margin-top: -6px;
-    margin-bottom: 12px;
-    line-height: 1;
-  }
-
-  .kpi-off {
-    color: var(--text-muted);
-    font-size: 22px;
-  }
-
-  /* ── METRICS ── */
-  .metrics {
-    border-top: 1px solid var(--border);
-    padding-top: 11px;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    text-align: left;
-  }
-
-  .mrow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .mlabel {
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-
-  .mval {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .mval-off { color: var(--text-muted) !important; }
-  .c-normal  { color: #007A4D; }
-  .c-warning { color: #9E6700; }
-  .c-danger  { color: #B5002E; }
+  .metrics { border-top: 1px solid var(--border); padding-top: 11px; display: flex; flex-direction: column; gap: 7px; text-align: left; }
+  .mrow { display: flex; justify-content: space-between; align-items: center; }
+  .mlabel { font-size: 10px; font-weight: 500; color: var(--text-secondary); }
+  .mval { font-size: 11px; font-weight: 700; color: var(--text-primary); }
+  
+  .c-normal { color: #007D43; }
+  .c-warning { color: #BF8900; }
+  .c-danger { color: #B9251C; }
 </style>
 </head>
 <body>
@@ -365,14 +152,9 @@
 </div>
 
 <div class="content">
-
   <div class="tab-nav">
-    <button class="tab-btn active" data-tab="chillers">
-      <span class="tab-icon">❄️</span> Chillers
-    </button>
-    <button class="tab-btn" data-tab="compresores">
-      <span class="tab-icon">🔧</span> Compresores
-    </button>
+    <button class="tab-btn active" data-tab="chillers">❄️ Chillers</button>
+    <button class="tab-btn" data-tab="compresores">🔧 Compresores</button>
   </div>
 
   <div id="pane-chillers" class="tab-pane active">
@@ -390,7 +172,6 @@
     </div>
     <div class="grid" id="grid-compresores"></div>
   </div>
-
 </div>
 
 <script>
@@ -399,27 +180,15 @@ const CONFIG = {
   API_TOKEN : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
   BOARD_ID  : '18403987245',
   CHILLER_NAMES: ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COL: {
-    CARGA   : 'numeric_mm1h2wdq',
-    TEMP_OUT: 'numeric_mm1fssgs',
-    TEMP_IN : 'numeric_mm1ffh7p',
-    PRES_OUT: 'numeric_mm1fkdjh',
-    PRES_IN : 'numeric_mm1f4rmc',
-    STATUS  : 'status',
-  },
+  COL: { CARGA: 'numeric_mm1h2wdq', TEMP_OUT: 'numeric_mm1fssgs', TEMP_IN: 'numeric_mm1ffh7p', PRES_OUT: 'numeric_mm1fkdjh', PRES_IN: 'numeric_mm1f4rmc', STATUS: 'status' }
 };
 
-const CHILLER_SUB = {
-  CH001: 'Confort Oficinas', CH002: 'Confort CR1/CR2', CH003: 'Confort CR1/CR2',
-  CH004: 'Proceso CR2',      CH005: 'Proceso CR3',     CH006: 'Confort CR3',
-  CH007: 'Confort CR3',      CH008: 'Confort CR4',     CH009: 'Confort CR4',
-  CH010: 'Proceso CR2',
-};
+const CHILLER_SUB = { CH001: 'Confort Oficinas', CH002: 'Confort CR1/CR2', CH003: 'Confort CR1/CR2', CH004: 'Proceso CR2', CH005: 'Proceso CR3', CH006: 'Confort CR3', CH007: 'Confort CR3', CH008: 'Confort CR4', CH009: 'Confort CR4', CH010: 'Proceso CR2' };
 
 const STATIC_COMPRESORES = [
-  { id: 1, name: 'COMP001', sub: 'Aire Comprimido 01', tempCarga: 78,  tempDescarga: 98,  presCarga: 110, presDescarga: 105, status: 'operativo'     },
-  { id: 2, name: 'COMP002', sub: 'Aire Comprimido 02', tempCarga: 84,  tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo'     },
-  { id: 3, name: 'COMP003', sub: 'Aire Comprimido 03', tempCarga: 0,   tempDescarga: 0,   presCarga: 0,   presDescarga: 0,   status: 'fuera-servicio' },
+  { id: 1, name: 'COMP001', sub: 'Aire Comprimido 01', tempCarga: 78, tempDescarga: 98, presCarga: 110, presDescarga: 105, status: 'operativo' },
+  { id: 2, name: 'COMP002', sub: 'Aire Comprimido 02', tempCarga: 84, tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo' },
+  { id: 3, name: 'COMP003', sub: 'Aire Comprimido 03', tempCarga: 0, tempDescarga: 0, presCarga: 0, presDescarga: 0, status: 'fuera-servicio' }
 ];
 
 /* ─────────────────────────── GAUGE ──────────────────────────── */
@@ -443,15 +212,13 @@ function buildGauge(svg, gradId, unit = '%') {
   const defs = document.createElementNS(SVG_NS, 'defs');
   const grad = document.createElementNS(SVG_NS, 'linearGradient');
   grad.id = gradId;
-  [{ o: '0%', c: '#00C875' }, { o: '55%', c: '#FFCB00' }, { o: '100%', c: '#E2445C' }]
-    .forEach(({ o, c }) => {
-      const stop = document.createElementNS(SVG_NS, 'stop');
-      stop.setAttribute('offset', o);
-      stop.setAttribute('stop-color', c);
-      grad.appendChild(stop);
-    });
-  defs.appendChild(grad);
-  svg.appendChild(defs);
+  // Colores actualizados a Medline semafórico
+  [{ o: '0%', c: '#00A859' }, { o: '55%', c: '#FFB800' }, { o: '100%', c: '#D93025' }].forEach(s => {
+    const stop = document.createElementNS(SVG_NS, 'stop');
+    stop.setAttribute('offset', s.o); stop.setAttribute('stop-color', s.c);
+    grad.appendChild(stop);
+  });
+  defs.appendChild(grad); svg.appendChild(defs);
 
   /* Track bg */
   const o1b = arcPoint(0, R_OUTER), o2b = arcPoint(100, R_OUTER);
@@ -484,7 +251,7 @@ function buildGauge(svg, gradId, unit = '%') {
 
   /* Pivot */
   svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '10', fill: '#FFFFFF', stroke: '#E6E9EF', 'stroke-width': '2' }));
-  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '5',  fill: '#0079F2' }));
+  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '5',  fill: '#004F9F' }));
 
   return needle;
 }
@@ -500,7 +267,7 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp = false) {
     needle.setAttribute('y2', p.y);
     if (kpiEl) {
       kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
-      kpiEl.style.color = cur > 85 ? '#B5002E' : cur > 65 ? '#9E6700' : '#007A4D';
+      kpiEl.style.color = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
     }
     if (t < 1) requestAnimationFrame(frame);
   }
@@ -514,41 +281,29 @@ function metricRow(label, value, cssClass = '') {
   return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cssClass}">${value}</span></div>`;
 }
 
-function isOff(status) { return status === 'fuera-servicio'; }
-
 function badgeHtml(off) {
   const cls  = off ? 'badge-fuera-servicio' : 'badge-operativo';
   const text = off ? 'Fuera de servicio' : 'Operativo';
-  return `<span class="status-badge ${cls}"><span class="badge-dot"></span>${text}</span>`;
+  return `<span class="status-badge ${cls}">${text}</span>`;
 }
 
 /* ────────────────────────── RENDER ──────────────────────────── */
 function renderChiller(ch, index) {
-  const off  = isOff(ch.status);
+  const off  = ch.status === 'fuera-servicio';
   const card = document.createElement('div');
   card.className = 'card' + (off ? ' card-off' : '');
 
-  const cargaClass = off ? 'mval-off' : ch.carga   > 80 ? 'c-danger' : 'c-normal';
-  const tOutClass  = off ? 'mval-off' : ch.tempOut > 60 ? 'c-danger' : '';
-  const tInClass   = off ? 'mval-off' : '';
-  const pClass     = off ? 'mval-off' : 'c-warning';
-
   card.innerHTML = `
     <div class="card-header">
-      <div class="card-title-wrap">
-        <div class="card-title">${ch.name}</div>
-        <div class="card-sub">${ch.sub}</div>
-      </div>
+      <div><div class="card-title">${ch.name}</div><div class="card-sub">${ch.sub}</div></div>
       ${badgeHtml(off)}
     </div>
     <div class="gauge-wrap"><svg id="svg-ch-${index}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
     <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-ch-${index}">${off ? DASH : '0%'}</div>
     <div class="metrics">
-      ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',  cargaClass)}
-      ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F', tOutClass)}
-      ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F', tInClass)}
-      ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', pClass)}
-      ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', pClass)}
+      ${metricRow('Carga', off ? DASH : ch.carga + ' %', off ? '' : (ch.carga > 80 ? 'c-danger' : 'c-normal'))}
+      ${metricRow('T° Salida', off ? DASH : ch.tempOut + ' °F')}
+      ${metricRow('P. Salida', off ? DASH : ch.presOut + ' psi', 'c-warning')}
     </div>`;
 
   document.getElementById('grid-chillers').appendChild(card);
@@ -557,29 +312,20 @@ function renderChiller(ch, index) {
 }
 
 function renderCompresor(cp) {
-  const off  = isOff(cp.status);
+  const off  = cp.status === 'fuera-servicio';
   const card = document.createElement('div');
   card.className = 'card' + (off ? ' card-off' : '');
 
-  const tCargaClass    = off ? 'mval-off' : cp.tempCarga    > 85 ? 'c-danger' : 'c-normal';
-  const tDescargaClass = off ? 'mval-off' : cp.tempDescarga > 95 ? 'c-danger' : 'c-normal';
-  const pClass         = off ? 'mval-off' : 'c-warning';
-
   card.innerHTML = `
     <div class="card-header">
-      <div class="card-title-wrap">
-        <div class="card-title">${cp.name}</div>
-        <div class="card-sub">${cp.sub}</div>
-      </div>
+      <div><div class="card-title">${cp.name}</div><div class="card-sub">${cp.sub}</div></div>
       ${badgeHtml(off)}
     </div>
     <div class="gauge-wrap"><svg id="svg-cp-${cp.id}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
     <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
     <div class="metrics">
-      ${metricRow('T° Carga',    off ? DASH : cp.tempCarga    + ' °F', tCargaClass)}
-      ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', tDescargaClass)}
-      ${metricRow('P. Carga',    off ? DASH : cp.presCarga    + ' psi', pClass)}
-      ${metricRow('P. Descarga', off ? DASH : cp.presDescarga + ' psi', pClass)}
+      ${metricRow('T° Carga', off ? DASH : cp.tempCarga + ' °F')}
+      ${metricRow('P. Carga', off ? DASH : cp.presCarga + ' psi', 'c-warning')}
     </div>`;
 
   document.getElementById('grid-compresores').appendChild(card);
@@ -589,81 +335,55 @@ function renderCompresor(cp) {
 
 /* ─────────────────────── TAB NAVIGATION ────────────────────── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(`pane-${btn.dataset.tab}`).classList.add('active');
-  });
+  };
 });
 
 /* ─────────────────────── MONDAY.COM API ────────────────────── */
 async function fetchBoardItems() {
   const res = await fetch('https://api.monday.com/v2', {
     method : 'POST',
-    headers: {
-      'Content-Type'  : 'application/json',
-      'Authorization' : CONFIG.API_TOKEN,
-      'API-Version'   : '2023-10',
-    },
-    body: JSON.stringify({
-      query: `query { boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 100) { items { name column_values { id text } created_at } } } }`,
-    }),
+    headers: { 'Content-Type': 'application/json', 'Authorization': CONFIG.API_TOKEN, 'API-Version': '2023-10' },
+    body: JSON.stringify({ query: `{ boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 50) { items { name column_values { id text } created_at } } } }` })
   });
   const json = await res.json();
   return json.data.boards[0].items_page.items;
-}
-
-function deduplicateByName(items) {
-  const seen = new Map();
-  for (const item of items) {
-    const name = item.name.trim().toUpperCase();
-    if (!CONFIG.CHILLER_NAMES.includes(name)) continue;
-    const existing = seen.get(name);
-    if (!existing || new Date(item.created_at) > new Date(existing.created_at)) {
-      seen.set(name, item);
-    }
-  }
-  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
-}
-
-function colVal(item, colId) {
-  return item.column_values.find(c => c.id === colId)?.text ?? '0';
-}
-
-function parseChiller(item, index) {
-  const get        = (id) => parseFloat(colVal(item, id));
-  const statusText = colVal(item, CONFIG.COL.STATUS).toLowerCase();
-  return {
-    id     : index,
-    name   : item.name,
-    sub    : CHILLER_SUB[item.name] ?? 'Sistema PDM',
-    carga  : get(CONFIG.COL.CARGA),
-    tempOut: get(CONFIG.COL.TEMP_OUT),
-    tempIn : get(CONFIG.COL.TEMP_IN),
-    presOut: get(CONFIG.COL.PRES_OUT),
-    presIn : get(CONFIG.COL.PRES_IN),
-    status : statusText.includes('operativo') ? 'operativo' : 'fuera-servicio',
-  };
 }
 
 /* ────────────────────────── INIT ────────────────────────────── */
 async function init() {
   const statusEl = document.getElementById('update-status');
   try {
-    const items    = await fetchBoardItems();
-    const chillers = deduplicateByName(items);
-    chillers.forEach((item, i) => renderChiller(parseChiller(item, i), i));
-    STATIC_COMPRESORES.forEach(renderCompresor);
+    const items = await fetchBoardItems();
+    document.getElementById('grid-chillers').innerHTML = '';
+    const filtered = items.filter(i => CONFIG.CHILLER_NAMES.includes(i.name)).slice(0, 10);
+    
+    filtered.forEach((item, i) => {
+      const get = (id) => parseFloat(item.column_values.find(c => c.id === id)?.text || 0);
+      renderChiller({
+        name: item.name, sub: CHILLER_SUB[item.name], carga: get(CONFIG.COL.CARGA), tempOut: get(CONFIG.COL.TEMP_OUT), presOut: get(CONFIG.COL.PRES_OUT),
+        status: item.column_values.find(c => c.id === CONFIG.COL.STATUS)?.text.toLowerCase().includes('operativo') ? 'operativo' : 'fuera-servicio'
+      }, i);
+    });
+    document.getElementById('count-chillers').textContent = `${filtered.length} equipos`;
 
-    document.getElementById('count-chillers').textContent    = `${chillers.length} equipos`;
+    document.getElementById('grid-compresores').innerHTML = '';
+    STATIC_COMPRESORES.forEach(renderCompresor);
     document.getElementById('count-compresores').textContent = `${STATIC_COMPRESORES.length} equipos`;
-    statusEl.textContent = `Actualizado: ${new Date().toLocaleTimeString()}`;
+
+    const ahora = new Date();
+    const dia  = String(ahora.getDate()).padStart(2, '0');
+    const mes  = String(ahora.getMonth() + 1).padStart(2, '0');
+    const año  = String(ahora.getFullYear()).slice(-2);
+    const hora = String(ahora.getHours()).padStart(2, '0');
+    const min  = String(ahora.getMinutes()).padStart(2, '0');
+    statusEl.textContent = `${dia}/${mes}/${año}-${hora}:${min}`;
+
   } catch (err) {
-    console.error(err);
     statusEl.textContent = 'Error de conexión';
-    document.querySelector('.sync-dot').style.background = '#E2445C';
-    document.querySelector('.sync-dot').style.animation  = 'none';
   }
 }
 
