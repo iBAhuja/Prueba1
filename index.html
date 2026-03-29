@@ -3,123 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard CHillers</title>
+<title>Mantenimiento PDM | Medline Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --primary:       #004F9F;
+    --primary-dark:  #003D7C;
+    --primary-light: #E6F0F9;
+    --success:       #00A859;
+    --success-bg:    #E6F6EF;
+    --warning:       #FFB800;
+    --warning-bg:    #FFF8E6;
+    --danger:        #D93025;
+    --danger-bg:     #FCEAE9;
+    --neutral:       #676879;
+    --neutral-light: #C5C7D4;
+    --bg:            #F9FAFB;
+    --surface:       #FFFFFF;
+    --border:        #E6E9EF;
+    --text-primary:  #323338;
+    --text-secondary:#676879;
+    --text-muted:    #C5C7D4;
+    --font:          'Inter', sans-serif;
+    --radius:        12px;
+    --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
+    --shadow-hover:  0 8px 24px rgba(0,79,159,0.14);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
-  body {
-    background: #f0f4f8;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    padding: 24px;
-    color: #000000;
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow-sm);
   }
+  .topbar-inner {
+    max-width: 1600px; margin: 0 auto; padding: 0 24px;
+    height: 60px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-brand { display: flex; align-items: center; gap: 10px; }
+  .brand-icon {
+    width: 34px; height: 34px; background: var(--primary);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: #fff;
+  }
+  .brand-name { font-size: 15px; font-weight: 700; }
+  .brand-name span { color: var(--primary); }
 
-  .page-header {
-    text-align: center;
-    margin-bottom: 28px;
+  .sync-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; font-weight: 500; color: var(--text-secondary);
   }
-  .page-header h1 {
-    font-size: 26px;
-    font-weight: 800;
-    color: #000000;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  .sync-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--success); animation: blink 2s infinite;
   }
-  .page-header p {
-    font-size: 13px;
-    color: #000000;
-    margin-top: 4px;
-    letter-spacing: .5px;
-    font-weight: 600;
-  }
+  .sync-dot.error { background: var(--danger); animation: none; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+  /* ── CONTENT ── */
+  .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
+
+  .tab-nav {
+    display: flex; gap: 4px; margin-bottom: 24px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px; width: fit-content;
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 7px; padding: 8px 20px;
+    border: none; background: transparent; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    border-radius: 7px; transition: 0.18s;
+  }
+  .tab-btn.active { background: var(--primary); color: #fff; }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── GRID & CARDS ── */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 18px;
-    max-width: 1600px;
-    margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
   }
-
-  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 500px)  { .grid { grid-template-columns: 1fr; } }
 
   .card {
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-    padding: 18px 16px 14px;
-    text-align: center;
-    transition: box-shadow .2s;
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 18px 16px 15px;
+    transition: 0.2s; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden; text-align: center;
   }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #000000;
-    text-transform: uppercase;
-    margin-bottom: 2px;
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+    width: 4px; background: var(--primary);
   }
-  .card-sub {
-    font-size: 10px;
-    color: #000000;
-    margin-bottom: 6px;
-  }
+  .card.card-off::before    { background: var(--neutral-light); }
+  .card.card-warn::before   { background: var(--warning); }
+  .card.card-alarm::before  { background: #FF8C00; }
+  .card.card-fail::before   { background: var(--danger); }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
+  .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .card-sub    { font-size: 11px; color: var(--text-secondary); }
+
+  /* ── BADGES ── */
   .status-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
-    margin-bottom: 6px;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+    white-space: nowrap;
   }
-  .badge-operativo       { background: #dcfce7; color: #166534; }
-  .badge-carga-parcial   { background: #fef9c3; color: #854d0e; }
-  .badge-alarma-activa   { background: #ffedd5; color: #9a3412; }
-  .badge-falla-critica   { background: #fee2e2; color: #991b1b; }
-  .badge-fuera-servicio  { background: #f1f5f9; color: #000000; }
+  .badge-operativo      { background: var(--success-bg);  color: #007D43; }
+  .badge-carga-parcial  { background: var(--warning-bg);  color: #BF8900; }
+  .badge-alarma-activa  { background: #FFF0E0;             color: #C05800; }
+  .badge-falla-critica  { background: var(--danger-bg);   color: #B9251C; }
+  .badge-fuera-servicio { background: #F1F3F6;             color: #676879; }
 
   .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
+  .kpi-value  { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
+  .kpi-off    { color: var(--text-muted); font-size: 22px; }
 
-  .kpi-value {
-    font-size: 28px;
-    font-weight: 800;
-    margin-top: -8px;
-    margin-bottom: 8px;
+  .metrics { border-top: 1px solid var(--border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .mrow    { display: flex; justify-content: space-between; align-items: center; }
+  .mlabel  { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+  .mval    { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+
+  .c-normal  { color: #007D43; }
+  .c-warning { color: #BF8900; }
+  .c-danger  { color: #B9251C; }
+  .c-off     { color: var(--text-muted); }
+
+  /* ── LOADING ── */
+  .loading-state {
+    grid-column: 1/-1;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 260px; gap: 12px;
+    color: var(--text-secondary); font-size: 13px; font-weight: 500;
   }
-
-  .metrics { text-align: left; border-top: 1px solid #eeeeee; padding-top: 8px; }
-  .mrow {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px dashed #eeeeee;
-    font-size: 11px;
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border); border-top-color: var(--primary);
+    border-radius: 50%; animation: spin .8s linear infinite;
   }
-  .mrow:last-child { border-bottom: none; }
-  .mlabel { color: #000000; font-weight: 600; }
-  .mval   { font-family: 'Courier New', monospace; font-weight: 700; }
-
-  .c-normal  { color: #16a34a; }
-  .c-warning { color: #d97706; }
-  .c-danger  { color: #dc2626; }
-  .c-off     { color: #000000; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<div class="page-header">
-  <h1>Sistema de Chillers – PDM</h1>
-  <p id="update-status">CARGANDO DATOS DESDE MONDAY.COM...</p>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <div class="brand-icon">❄️</div>
+      <div class="brand-name">Mantenimiento <span>PDM</span></div>
+    </div>
+    <div class="sync-badge">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span id="update-status">Sincronizando...</span>
+    </div>
+  </div>
 </div>
 
-<div class="grid" id="grid"></div>
+<div class="content">
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="chillers">❄️ Chillers</button>
+    <button class="tab-btn" data-tab="compresores">🔧 Compresores</button>
+  </div>
+
+  <div id="pane-chillers" class="tab-pane active">
+    <div class="grid" id="grid-chillers">
+      <div class="loading-state"><div class="spinner"></div><span>Conectando con Monday.com…</span></div>
+    </div>
+  </div>
+
+  <div id="pane-compresores" class="tab-pane">
+    <div class="grid" id="grid-compresores"></div>
+  </div>
+</div>
 
 <script>
-/* ════════════════════════════════════════════════════════
-   CONFIGURACIÓN
-   ════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   CONFIG  (lógica original)
+   ═══════════════════════════════════════════════ */
 const CONFIG = {
   API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
   BOARD_ID:       '18403987245',
@@ -137,141 +205,106 @@ const CONFIG = {
   }
 };
 
-/* ════════════════════════════════════════════════════════
-   GAUGE – DIBUJO SVG
-   ════════════════════════════════════════════════════════ */
+const CHILLER_SUB = {
+  CH001:'Confort Oficinas', CH002:'Confort CR1/CR2', CH003:'Confort CR1/CR2',
+  CH004:'Proceso CR2',      CH005:'Proceso CR3',     CH006:'Confort CR3',
+  CH007:'Confort CR3',      CH008:'Confort CR4',     CH009:'Confort CR4',
+  CH010:'Proceso CR2'
+};
+
+const STATIC_COMPRESORES = [
+  { id:101, name:'COMP001', sub:'Aire Comprimido 01', tempCarga:78,  status:'operativo',      presCarga:110 },
+  { id:102, name:'COMP002', sub:'Aire Comprimido 02', tempCarga:84,  status:'operativo',      presCarga:115 },
+  { id:103, name:'COMP003', sub:'Aire Comprimido 03', tempCarga:0,   status:'fuera-servicio', presCarga:0   }
+];
+
+/* ═══════════════════════════════════════════════
+   GAUGE SVG
+   ═══════════════════════════════════════════════ */
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const GAUGE = { CX: 115, CY: 110, R_OUTER: 94, R_INNER: 62, R_NEEDLE: 86 };
+const G = { CX:115, CY:110, R_OUTER:90, R_INNER:60, R_NEEDLE:82 };
 
 function pt(val, r) {
-  const rad = (180 - (val / 100) * 180) * Math.PI / 180;
-  return { x: GAUGE.CX + r * Math.cos(rad), y: GAUGE.CY - r * Math.sin(rad) };
+  const rad = (180 - (Math.min(val,100)/100)*180) * Math.PI/180;
+  return { x: G.CX + r*Math.cos(rad), y: G.CY - r*Math.sin(rad) };
 }
-
 function svgEl(tag, attrs) {
-  const e = document.createElementNS(SVG_NS, tag);
-  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-  return e;
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
+  return el;
 }
 
-function colorClass(val) {
-  if (val > 80) return 'c-danger';
-  if (val > 50) return 'c-warning';
-  return 'c-normal';
-}
+function buildGauge(svg, gradId, unit='%') {
+  const { CX, CY, R_OUTER, R_INNER } = G;
+  const defs = document.createElementNS(SVG_NS,'defs');
+  const grad = svgEl('linearGradient',{ id:gradId, x1:'0%', y1:'0%', x2:'100%', y2:'0%' });
+  [{ o:'0%', c:'#00A859' },{ o:'55%', c:'#FFB800' },{ o:'100%', c:'#D93025' }].forEach(s =>
+    grad.appendChild(svgEl('stop',{ offset:s.o, 'stop-color':s.c }))
+  );
+  defs.appendChild(grad); svg.appendChild(defs);
 
-function kpiColor(val) {
-  if (val > 80) return '#dc2626';
-  if (val > 50) return '#d97706';
-  return '#16a34a';
-}
+  const o1=pt(0,R_OUTER), o2=pt(100,R_OUTER), i1=pt(0,R_INNER), i2=pt(100,R_INNER);
+  const arcD = `M ${o1.x} ${o1.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y} Z`;
+  svg.appendChild(svgEl('path',{ d:arcD, fill:'#F5F6FA', stroke:'#E6E9EF', 'stroke-width':'1' }));
+  svg.appendChild(svgEl('path',{ d:arcD, fill:`url(#${gradId})`, opacity:'0.85' }));
 
-function buildGauge(svgEl_, gradId) {
-  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = GAUGE;
-
-  const defs = document.createElementNS(SVG_NS, 'defs');
-  const grad = document.createElementNS(SVG_NS, 'linearGradient');
-  grad.setAttribute('id', gradId);
-  grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
-  grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '0%');
-  [{ o: '0%', c: '#3DB554' }, { o: '50%', c: '#f59e0b' }, { o: '100%', c: '#ef4444' }].forEach(s => {
-    const stop = document.createElementNS(SVG_NS, 'stop');
-    stop.setAttribute('offset', s.o);
-    stop.setAttribute('stop-color', s.c);
-    grad.appendChild(stop);
-  });
-  defs.appendChild(grad);
-  svgEl_.appendChild(defs);
-
-  const o1 = pt(0, R_OUTER), o2 = pt(100, R_OUTER);
-  const i1 = pt(0, R_INNER), i2 = pt(100, R_INNER);
-  const arc = [
-    `M ${o1.x} ${o1.y}`,
-    `A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y}`,
-    `L ${i2.x} ${i2.y}`,
-    `A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y}`,
-    'Z'
-  ].join(' ');
-  svgEl_.appendChild(svgEl('path', { d: arc, fill: `url(#${gradId})`, opacity: '0.92' }));
-
-  [0, 25, 50, 75, 100].forEach(v => {
-    const p1 = pt(v, R_OUTER + 3), p2 = pt(v, R_OUTER + 11), pl = pt(v, R_OUTER + 20);
-    svgEl_.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#000000', 'stroke-width': '1.5' }));
-    const txt = document.createElementNS(SVG_NS, 'text');
-    txt.setAttribute('x', pl.x); txt.setAttribute('y', pl.y + 4);
-    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '8');
-    txt.setAttribute('fill', '#000000'); txt.setAttribute('font-weight', 'bold');
-    txt.textContent = v + '%';
-    svgEl_.appendChild(txt);
+  [0,25,50,75,100].forEach(v => {
+    const p1=pt(v,R_OUTER+2), p2=pt(v,R_OUTER+9), pl=pt(v,R_OUTER+18);
+    svg.appendChild(svgEl('line',{ x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,stroke:'#C5C7D4','stroke-width':'1.5' }));
+    const lbl = svgEl('text',{ x:pl.x,y:pl.y+4,'text-anchor':'middle','font-size':'8',fill:'#676879','font-family':'Inter','font-weight':'600' });
+    lbl.textContent = v+unit; svg.appendChild(lbl);
   });
 
-  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#000000', 'stroke-width': '3', 'stroke-linecap': 'round' });
-  svgEl_.appendChild(needle);
-  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '8', fill: '#000000' }));
-  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '3.5', fill: '#fff' }));
-
+  const needle = svgEl('line',{ x1:CX,y1:CY,x2:CX-G.R_NEEDLE,y2:CY,stroke:'#323338','stroke-width':'2.5','stroke-linecap':'round' });
+  svg.appendChild(needle);
+  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'10',fill:'#FFFFFF',stroke:'#E6E9EF','stroke-width':'2' }));
+  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'5', fill:'#004F9F' }));
   return needle;
 }
 
-function animateNeedle(needle, kpiEl, targetVal, delay = 0) {
-  const DURATION = 1400;
+function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   setTimeout(() => {
     const start = performance.now();
     function frame(now) {
-      const t = Math.min((now - start) / DURATION, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
+      const t = Math.min((now-start)/1200, 1);
+      const ease = 1 - Math.pow(1-t, 3);
       const cur = ease * targetVal;
-      const p = pt(cur, GAUGE.R_NEEDLE);
+      const p = pt(cur, G.R_NEEDLE);
       needle.setAttribute('x2', p.x);
       needle.setAttribute('y2', p.y);
-      kpiEl.textContent = Math.round(cur) + '%';
-      kpiEl.style.color = kpiColor(cur);
+      if (kpiEl) {
+        kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
+        kpiEl.style.color  = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
+      }
       if (t < 1) requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }, delay);
 }
 
-/* ════════════════════════════════════════════════════════
-   HELPERS DE FECHA
-   ════════════════════════════════════════════════════════ */
-
-/** Formatea una fecha como "DD/MM/AAAA HH:MM:SS" */
-function formatDateTime(date) {
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ` +
-         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
-/* ════════════════════════════════════════════════════════
-   API MONDAY.COM
-   ════════════════════════════════════════════════════════ */
-
-async function fetchMondayAPI(query, attempt = 1) {
+/* ═══════════════════════════════════════════════
+   API MONDAY.COM  (lógica original: reintentos + paginación)
+   ═══════════════════════════════════════════════ */
+async function fetchMondayAPI(query, attempt=1) {
   try {
-    const response = await fetch('https://api.monday.com/v2', {
+    const res = await fetch('https://api.monday.com/v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': CONFIG.API_TOKEN,
-        'API-Version': '2023-10'
+        'API-Version':   '2023-10'
       },
       body: JSON.stringify({ query })
     });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-
-    const data = await response.json();
-    if (data.errors) throw new Error(data.errors.map(e => e.message).join(', '));
-    if (!data.data) throw new Error('Respuesta inesperada de la API.');
-
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+    if (data.errors) throw new Error(data.errors.map(e=>e.message).join(', '));
+    if (!data.data)  throw new Error('Respuesta inesperada de la API.');
     return data;
-
   } catch (err) {
     if (attempt < CONFIG.MAX_RETRIES) {
-      console.warn(`Intento ${attempt} fallido. Reintentando en ${CONFIG.RETRY_DELAY_MS}ms...`, err.message);
       await new Promise(r => setTimeout(r, CONFIG.RETRY_DELAY_MS));
-      return fetchMondayAPI(query, attempt + 1);
+      return fetchMondayAPI(query, attempt+1);
     }
     throw err;
   }
@@ -280,185 +313,185 @@ async function fetchMondayAPI(query, attempt = 1) {
 async function fetchAllItems() {
   const allItems = [];
   let cursor = null;
-
   do {
     const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
     const query = `query {
       boards(ids: ${CONFIG.BOARD_ID}) {
         items_page(limit: 100${cursorArg}) {
           cursor
-          items {
-            id
-            name
-            created_at
-            column_values { id text }
-          }
+          items { id name created_at column_values { id text } }
         }
       }
     }`;
-
     const data = await fetchMondayAPI(query);
     const page = data.data.boards[0].items_page;
     allItems.push(...page.items);
     cursor = page.cursor || null;
-
   } while (cursor);
-
   return allItems;
 }
 
-function parseStatus(rawStatus = '') {
-  const s = rawStatus.toLowerCase().trim();
-  if (s.includes('operativo'))          return 'operativo';
-  if (s.includes('carga parcial'))      return 'carga-parcial';
-  if (s.includes('alarma'))             return 'alarma-activa';
-  if (s.includes('falla'))              return 'falla-critica';
+/* Parseo de estado completo (5 estados) */
+function parseStatus(raw='') {
+  const s = raw.toLowerCase().trim();
+  if (s.includes('operativo'))     return 'operativo';
+  if (s.includes('carga parcial')) return 'carga-parcial';
+  if (s.includes('alarma'))        return 'alarma-activa';
+  if (s.includes('falla'))         return 'falla-critica';
   return 'fuera-servicio';
 }
 
-const CHILLER_SUB = {
-  'CH001': 'Confort Oficinas',
-  'CH002': 'Confort CR1/CR2',
-  'CH003': 'Confort CR1/CR2',
-  'CH004': 'Proceso CR2',
-  'CH005': 'Proceso CR3',
-  'CH006': 'Confort CR3',
-  'CH007': 'Confort CR3',
-  'CH008': 'Confort CR4',
-  'CH009': 'Confort CR4',
-  'CH010': 'Proceso CR2',
+/* ═══════════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════════ */
+const DASH = '—';
+
+const STATUS_CARD = {
+  'operativo':      '',
+  'carga-parcial':  'card-warn',
+  'alarma-activa':  'card-alarm',
+  'falla-critica':  'card-fail',
+  'fuera-servicio': 'card-off',
+};
+const STATUS_BADGE = {
+  'operativo':      'badge-operativo',
+  'carga-parcial':  'badge-carga-parcial',
+  'alarma-activa':  'badge-alarma-activa',
+  'falla-critica':  'badge-falla-critica',
+  'fuera-servicio': 'badge-fuera-servicio',
+};
+const STATUS_LABEL = {
+  'operativo':      '● Operativo',
+  'carga-parcial':  '◐ Carga Parcial',
+  'alarma-activa':  '⚠ Alarma Activa',
+  'falla-critica':  '✕ Falla Crítica',
+  'fuera-servicio': '○ Fuera de Servicio',
 };
 
-function parseChillerItem(item, index) {
-  const getVal = (id) => item.column_values.find(c => c.id === id)?.text || '0';
-  const { COL } = CONFIG;
-  const name = item.name.trim().toUpperCase();
-  return {
-    id:      index + 1,
-    name:    name,
-    sub:     CHILLER_SUB[name] || '—',
-    carga:   parseFloat(getVal(COL.CARGA))    || 0,
-    tempOut: parseFloat(getVal(COL.TEMP_OUT)) || 0,
-    tempIn:  parseFloat(getVal(COL.TEMP_IN))  || 0,
-    presOut: parseFloat(getVal(COL.PRES_OUT)) || 0,
-    presIn:  parseFloat(getVal(COL.PRES_IN))  || 0,
-    status:  parseStatus(getVal(COL.STATUS))
-  };
+function colorClass(val) { return val > 80 ? 'c-danger' : val > 50 ? 'c-warning' : 'c-normal'; }
+function tempClass(v)    { return v > 60   ? 'c-danger' : 'c-normal'; }
+
+function metricRow(label, value, cls='') {
+  return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${value}</span></div>`;
 }
 
-async function getChillersData() {
-  const items = await fetchAllItems();
-
-  const seen = new Map();
-  for (const item of items) {
-    const name = item.name.trim().toUpperCase();
-    if (!CONFIG.CHILLER_NAMES.includes(name)) continue;
-    const existing = seen.get(name);
-    if (!existing || new Date(item.created_at) > new Date(existing.created_at)) {
-      seen.set(name, item);
-    }
-  }
-
-  return Array.from(seen.values())
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(parseChillerItem);
-}
-
-/* ════════════════════════════════════════════════════════
-   RENDERIZADO
-   ════════════════════════════════════════════════════════ */
-
-function buildMetricRow(label, value, cssClass) {
-  return `
-    <div class="mrow">
-      <span class="mlabel">${label}</span>
-      <span class="mval ${cssClass}">${value}</span>
-    </div>`;
-}
-
-function renderCard(ch, idx) {
-  const isOff      = ch.status === 'fuera-servicio';
-  const badgeClass = {
-    'operativo':      'badge-operativo',
-    'carga-parcial':  'badge-carga-parcial',
-    'alarma-activa':  'badge-alarma-activa',
-    'falla-critica':  'badge-falla-critica',
-    'fuera-servicio': 'badge-fuera-servicio',
-  }[ch.status] || 'badge-fuera-servicio';
-  const badgeText = {
-    'operativo':      '● OPERATIVO',
-    'carga-parcial':  '◐ CARGA PARCIAL',
-    'alarma-activa':  '⚠ ALARMA ACTIVA',
-    'falla-critica':  '✕ FALLA CRÍTICA',
-    'fuera-servicio': '○ FUERA DE SERVICIO',
-  }[ch.status] || '○ FUERA DE SERVICIO';
-  const dash       = '—';
-
-  const tempClass  = (v) => v > 60 ? 'c-danger' : 'c-normal';
-
+function renderCard(ch, containerId, isChiller=true, delay=0) {
+  const off = ch.status === 'fuera-servicio';
   const card = document.createElement('div');
-  card.className = 'card';
+  card.className = `card ${STATUS_CARD[ch.status]||''}`.trim();
+
   card.innerHTML = `
-    <div class="card-title">${ch.name}</div>
-    <div class="card-sub">${ch.sub}</div>
-    <span class="status-badge ${badgeClass}">${badgeText}</span>
-    <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="135" viewBox="0 0 230 135" overflow="visible"></svg>
+    <div class="card-header">
+      <div>
+        <div class="card-title">${ch.name}</div>
+        <div class="card-sub">${ch.sub}</div>
+      </div>
+      <span class="status-badge ${STATUS_BADGE[ch.status]||'badge-fuera-servicio'}">
+        ${STATUS_LABEL[ch.status]||'○ Fuera de Servicio'}
+      </span>
     </div>
-    <div class="kpi-value" id="kpi-${ch.id}" style="color:#000000">${isOff ? dash : '0%'}</div>
+    <div class="gauge-wrap">
+      <svg id="svg-${ch.id}" width="230" height="130" viewBox="0 0 230 130"></svg>
+    </div>
+    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
     <div class="metrics">
-      ${buildMetricRow('Carga',     isOff ? dash : ch.carga   + ' %',   isOff ? 'c-off' : colorClass(ch.carga))}
-      ${buildMetricRow('T° Salida', isOff ? dash : ch.tempOut + ' °F',  isOff ? 'c-off' : tempClass(ch.tempOut))}
-      ${buildMetricRow('T° Entrada',isOff ? dash : ch.tempIn  + ' °F',  isOff ? 'c-off' : tempClass(ch.tempIn))}
-      ${buildMetricRow('P. Salida', isOff ? dash : ch.presOut + ' psi', isOff ? 'c-off' : 'c-warning')}
-      ${buildMetricRow('P. Entrada',isOff ? dash : ch.presIn  + ' psi', isOff ? 'c-off' : 'c-warning')}
+      ${isChiller ? `
+        ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
+        ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : tempClass(ch.tempOut))}
+        ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F',  off ? 'c-off' : tempClass(ch.tempIn))}
+        ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', off ? 'c-off' : 'c-warning')}
+        ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', off ? 'c-off' : 'c-warning')}
+      ` : `
+        ${metricRow('T° Carga',  off ? DASH : ch.tempCarga + ' °F', off ? 'c-off' : tempClass(ch.tempCarga))}
+        ${metricRow('P. Carga',  off ? DASH : ch.presCarga + ' psi','c-warning')}
+      `}
     </div>`;
 
-  return card;
+  document.getElementById(containerId).appendChild(card);
+
+  const needle = buildGauge(
+    document.getElementById(`svg-${ch.id}`),
+    `grad-${ch.id}`,
+    isChiller ? '%' : '°F'
+  );
+  if (!off) {
+    animateNeedle(
+      needle,
+      document.getElementById(`kpi-${ch.id}`),
+      isChiller ? ch.carga : ch.tempCarga,
+      !isChiller,
+      delay
+    );
+  }
 }
 
-function renderDashboard(chillers) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
-  chillers.forEach((ch, idx) => {
-    const card = renderCard(ch, idx);
-    grid.appendChild(card);
-
-    const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch${ch.id}`);
-    if (ch.status !== 'fuera-servicio') {
-      animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, idx * 100);
-    }
-  });
-}
-
-/* ════════════════════════════════════════════════════════
-   CARGA INICIAL – SIN AUTO-REFRESH
-   ════════════════════════════════════════════════════════ */
-
+/* ═══════════════════════════════════════════════
+   INIT + AUTO-REFRESH
+   ═══════════════════════════════════════════════ */
 async function init() {
   const statusEl = document.getElementById('update-status');
+  const dot      = document.getElementById('sync-dot');
+  statusEl.textContent = 'Sincronizando...';
+  dot.className = 'sync-dot';
+
   try {
-    statusEl.textContent = 'CARGANDO DATOS DESDE MONDAY.COM...';
-    const chillers = await getChillersData();
+    const rawItems = await fetchAllItems();
+    const latestMap = new Map();
 
-    if (chillers.length === 0) {
-      statusEl.textContent = 'SIN DATOS DISPONIBLES EN EL TABLERO';
-      return;
-    }
+    rawItems.forEach(item => {
+      const name = item.name.trim().toUpperCase();
+      if (!CONFIG.CHILLER_NAMES.includes(name)) return;
+      if (!latestMap.has(name) || new Date(item.created_at) > new Date(latestMap.get(name).created_at))
+        latestMap.set(name, item);
+    });
 
-    renderDashboard(chillers);
+    /* ── Chillers ── */
+    const gridCH = document.getElementById('grid-chillers');
+    gridCH.innerHTML = '';
+    CONFIG.CHILLER_NAMES.forEach((name, i) => {
+      const item = latestMap.get(name);
+      if (!item) return;
+      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      renderCard({
+        id:      i,
+        name,
+        sub:     CHILLER_SUB[name] || 'Equipo',
+        carga:   getVal(CONFIG.COL.CARGA),
+        tempOut: getVal(CONFIG.COL.TEMP_OUT),
+        tempIn:  getVal(CONFIG.COL.TEMP_IN),
+        presOut: getVal(CONFIG.COL.PRES_OUT),
+        presIn:  getVal(CONFIG.COL.PRES_IN),
+        status:  parseStatus(item.column_values.find(c=>c.id===CONFIG.COL.STATUS)?.text)
+      }, 'grid-chillers', true, i * 80);
+    });
 
-    const units = document.getElementById('grid').children.length;
-    statusEl.textContent = `RECORRIDO DIARIO CHILLER'S ACRELEC· ${formatDateTime(new Date())}`;
+    /* ── Compresores (estáticos) ── */
+    const gridCP = document.getElementById('grid-compresores');
+    gridCP.innerHTML = '';
+    STATIC_COMPRESORES.forEach((cp, i) => renderCard(cp, 'grid-compresores', false, i * 80));
+
+    const now = new Date();
+    statusEl.textContent = `Actualizado: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    dot.className = 'sync-dot';
 
   } catch (err) {
-    console.error('Error al obtener datos:', err);
-    statusEl.textContent = `ERROR: ${err.message}`;
+    console.error(err);
+    statusEl.textContent = `Error de conexión`;
+    dot.className = 'sync-dot error';
   }
 }
 
+/* ── Tabs ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`pane-${btn.dataset.tab}`).classList.add('active');
+  };
+});
+
 init();
+setInterval(init, CONFIG.REFRESH_MS);
 </script>
 </body>
 </html>
