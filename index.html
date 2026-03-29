@@ -505,7 +505,7 @@ async function init() {
 
     const now = new Date();
     const pad = n => String(n).padStart(2,'0');
-    statusEl.textContent = `Actualizado: ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}-${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    statusEl.textContent = ` ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}-${pad(now.getHours())}:${pad(now.getMinutes())}`;
     dot.className = 'sync-dot';
 
   } catch (err) {
