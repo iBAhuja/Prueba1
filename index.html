@@ -3,387 +3,458 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento PDM | Medline Style</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Dashboard CHillers</title>
 <style>
-  :root {
-    /* --- PALETA MEDLINE --- */
-    --primary:       #004F9F; 
-    --primary-dark:  #003D7C; 
-    --primary-light: #E6F0F9; 
-    --success:       #00A859; 
-    --success-bg:    #E6F6EF;
-    --warning:       #FFB800; 
-    --warning-bg:    #FFF8E6;
-    --danger:        #D93025; 
-    --danger-bg:     #FCEAE9;
-    --neutral:       #676879;
-    --neutral-light: #C5C7D4;
-    --bg:            #F9FAFB; 
-    --surface:       #FFFFFF; 
-    --border:        #E6E9EF; 
-    --text-primary:  #323338; 
-    --text-secondary:#676879; 
-    --text-muted:    #C5C7D4; 
-    --font:          'Inter', sans-serif;
-    --radius:        12px;
-    --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
-    --shadow-hover:  0 8px 24px rgba(0,79,159,0.14);
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
-  /* ── TOPBAR ── */
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: var(--shadow-sm);
-  }
-  .topbar-inner {
-    max-width: 1600px; margin: 0 auto; padding: 0 24px;
-    height: 60px; display: flex; align-items: center; justify-content: space-between;
-  }
-  .topbar-brand { display: flex; align-items: center; gap: 10px; }
-  .brand-icon {
-    width: 34px; height: 34px; background: var(--primary);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    font-size: 17px; color: #fff;
-  }
-  .brand-name { font-size: 15px; font-weight: 700; }
-  .brand-name span { color: var(--primary); }
-
-  .sync-badge {
-    display: flex; align-items: center; gap: 6px;
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 20px; padding: 5px 12px;
-    font-size: 11px; font-weight: 500; color: var(--text-secondary);
-  }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--success); animation: blink 2s infinite;
-  }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-  /* ── CONTENT ── */
-  .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
-
-  .tab-nav {
-    display: flex; gap: 4px; margin-bottom: 20px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 4px; width: fit-content;
-  }
-  .tab-btn {
-    display: flex; align-items: center; gap: 7px; padding: 8px 20px;
-    border: none; background: transparent; cursor: pointer;
-    font-size: 13px; font-weight: 600; color: var(--text-secondary);
-    border-radius: 7px; transition: 0.18s;
-  }
-  .tab-btn.active { background: var(--primary); color: #fff; }
-
-  .section-header { display: flex; align-items: center; margin-bottom: 16px; }
-  .section-title { font-size: 16px; font-weight: 700; }
-  .section-count {
-    font-size: 11px; font-weight: 500; color: var(--text-secondary);
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 2px 9px; margin-left: 10px;
+  body {
+    background: #f0f4f8;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    padding: 24px;
+    color: #000000;
   }
 
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
+  .page-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .page-header p {
+    font-size: 13px;
+    color: #000000;
+    margin-top: 4px;
+    letter-spacing: .5px;
+    font-weight: 600;
+  }
 
-  /* ── GRID & CARDS ── */
   .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    max-width: 1600px;
+    margin: 0 auto;
   }
-  .card {
-    background: var(--surface); border-radius: var(--radius);
-    border: 1px solid var(--border); padding: 18px 16px 15px;
-    transition: 0.2s; box-shadow: var(--shadow-sm);
-    position: relative; overflow: hidden; text-align: center;
-  }
-  .card::before {
-    content: ''; position: absolute; top: 0; left: 0; bottom: 0;
-    width: 4px; background: var(--primary);
-  }
-  .card.card-off::before { background: var(--neutral-light); }
-  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
-  .card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
-  .card-sub { font-size: 10px; color: var(--text-secondary); }
+  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px)  { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+    padding: 18px 16px 14px;
+    text-align: center;
+    transition: box-shadow .2s;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .card-sub {
+    font-size: 10px;
+    color: #000000;
+    margin-bottom: 6px;
+  }
 
   .status-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 9px; font-weight: 600; padding: 3px 7px; border-radius: 20px;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 6px;
   }
-  .badge-operativo { background: var(--success-bg); color: #007D43; }
-  .badge-fuera-servicio { background: var(--danger-bg); color: #B9251C; }
+  .badge-operativo       { background: #dcfce7; color: #166534; }
+  .badge-carga-parcial   { background: #fef9c3; color: #854d0e; }
+  .badge-alarma-activa   { background: #ffedd5; color: #9a3412; }
+  .badge-falla-critica   { background: #fee2e2; color: #991b1b; }
+  .badge-fuera-servicio  { background: #f1f5f9; color: #000000; }
 
   .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
-  .kpi-value { font-size: 26px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
-  .kpi-off { color: var(--text-muted); font-size: 22px; }
 
-  .metrics { border-top: 1px solid var(--border); padding-top: 11px; display: flex; flex-direction: column; gap: 7px; text-align: left; }
-  .mrow { display: flex; justify-content: space-between; align-items: center; }
-  .mlabel { font-size: 10px; font-weight: 500; color: var(--text-secondary); }
-  .mval { font-size: 11px; font-weight: 700; color: var(--text-primary); }
-  
-  .c-normal { color: #007D43; }
-  .c-warning { color: #BF8900; }
-  .c-danger { color: #B9251C; }
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-top: -8px;
+    margin-bottom: 8px;
+  }
+
+  .metrics { text-align: left; border-top: 1px solid #eeeeee; padding-top: 8px; }
+  .mrow {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dashed #eeeeee;
+    font-size: 11px;
+  }
+  .mrow:last-child { border-bottom: none; }
+  .mlabel { color: #000000; font-weight: 600; }
+  .mval   { font-family: 'Courier New', monospace; font-weight: 700; }
+
+  .c-normal  { color: #16a34a; }
+  .c-warning { color: #d97706; }
+  .c-danger  { color: #dc2626; }
+  .c-off     { color: #000000; }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-brand">
-      <div class="brand-icon">⚙️</div>
-      <div class="brand-name">Mantenimiento <span>PDM</span></div>
-    </div>
-    <div class="sync-badge">
-      <span class="sync-dot"></span>
-      <span id="update-status">Sincronizando...</span>
-    </div>
-  </div>
+<div class="page-header">
+  <h1>Sistema de Chillers – PDM</h1>
+  <p id="update-status">CARGANDO DATOS DESDE MONDAY.COM...</p>
 </div>
 
-<div class="content">
-  <div class="tab-nav">
-    <button class="tab-btn active" data-tab="chillers">❄️ Chillers</button>
-    <button class="tab-btn" data-tab="compresores">🔧 Compresores</button>
-  </div>
-
-  <div id="pane-chillers" class="tab-pane active">
-    <div class="section-header">
-      <span class="section-title">Chillers</span>
-      <span class="section-count" id="count-chillers">—</span>
-    </div>
-    <div class="grid" id="grid-chillers"></div>
-  </div>
-
-  <div id="pane-compresores" class="tab-pane">
-    <div class="section-header">
-      <span class="section-title">Compresores</span>
-      <span class="section-count" id="count-compresores">—</span>
-    </div>
-    <div class="grid" id="grid-compresores"></div>
-  </div>
-</div>
+<div class="grid" id="grid"></div>
 
 <script>
-/* ─────────────────────────── CONFIG ─────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   CONFIGURACIÓN
+   ════════════════════════════════════════════════════════ */
 const CONFIG = {
-  API_TOKEN : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_ID  : '18403987245',
-  CHILLER_NAMES: ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COL: { CARGA: 'numeric_mm1h2wdq', TEMP_OUT: 'numeric_mm1fssgs', TEMP_IN: 'numeric_mm1ffh7p', PRES_OUT: 'numeric_mm1fkdjh', PRES_IN: 'numeric_mm1f4rmc', STATUS: 'status' }
+  API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
+  BOARD_ID:       '18403987245',
+  REFRESH_MS:     60_000,
+  MAX_RETRIES:    3,
+  RETRY_DELAY_MS: 3_000,
+  CHILLER_NAMES:  ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
+  COL: {
+    CARGA:    'numeric_mm1h2wdq',
+    TEMP_OUT: 'numeric_mm1fssgs',
+    TEMP_IN:  'numeric_mm1ffh7p',
+    PRES_OUT: 'numeric_mm1fkdjh',
+    PRES_IN:  'numeric_mm1f4rmc',
+    STATUS:   'status',
+  }
 };
 
-const CHILLER_SUB = { CH001: 'Confort Oficinas', CH002: 'Confort CR1/CR2', CH003: 'Confort CR1/CR2', CH004: 'Proceso CR2', CH005: 'Proceso CR3', CH006: 'Confort CR3', CH007: 'Confort CR3', CH008: 'Confort CR4', CH009: 'Confort CR4', CH010: 'Proceso CR2' };
-
-const STATIC_COMPRESORES = [
-  { id: 1, name: 'COMP001', sub: 'Aire Comprimido 01', tempCarga: 78, tempDescarga: 98, presCarga: 110, presDescarga: 105, status: 'operativo' },
-  { id: 2, name: 'COMP002', sub: 'Aire Comprimido 02', tempCarga: 84, tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo' },
-  { id: 3, name: 'COMP003', sub: 'Aire Comprimido 03', tempCarga: 0, tempDescarga: 0, presCarga: 0, presDescarga: 0, status: 'fuera-servicio' }
-];
-
-/* ─────────────────────────── GAUGE ──────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   GAUGE – DIBUJO SVG
+   ════════════════════════════════════════════════════════ */
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const G = { CX: 115, CY: 110, R_OUTER: 90, R_INNER: 60, R_NEEDLE: 82 };
+const GAUGE = { CX: 115, CY: 110, R_OUTER: 94, R_INNER: 62, R_NEEDLE: 86 };
 
-function arcPoint(val, r) {
-  const rad = (180 - (Math.min(val, 100) / 100) * 180) * Math.PI / 180;
-  return { x: G.CX + r * Math.cos(rad), y: G.CY - r * Math.sin(rad) };
+function pt(val, r) {
+  const rad = (180 - (val / 100) * 180) * Math.PI / 180;
+  return { x: GAUGE.CX + r * Math.cos(rad), y: GAUGE.CY - r * Math.sin(rad) };
 }
 
 function svgEl(tag, attrs) {
-  const el = document.createElementNS(SVG_NS, tag);
-  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
-  return el;
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  return e;
 }
 
-function buildGauge(svg, gradId, unit = '%') {
-  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = G;
+function colorClass(val) {
+  if (val > 80) return 'c-danger';
+  if (val > 50) return 'c-warning';
+  return 'c-normal';
+}
+
+function kpiColor(val) {
+  if (val > 80) return '#dc2626';
+  if (val > 50) return '#d97706';
+  return '#16a34a';
+}
+
+function buildGauge(svgEl_, gradId) {
+  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = GAUGE;
 
   const defs = document.createElementNS(SVG_NS, 'defs');
   const grad = document.createElementNS(SVG_NS, 'linearGradient');
-  grad.id = gradId;
-  // Colores actualizados a Medline semafórico
-  [{ o: '0%', c: '#00A859' }, { o: '55%', c: '#FFB800' }, { o: '100%', c: '#D93025' }].forEach(s => {
+  grad.setAttribute('id', gradId);
+  grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
+  grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '0%');
+  [{ o: '0%', c: '#3DB554' }, { o: '50%', c: '#f59e0b' }, { o: '100%', c: '#ef4444' }].forEach(s => {
     const stop = document.createElementNS(SVG_NS, 'stop');
-    stop.setAttribute('offset', s.o); stop.setAttribute('stop-color', s.c);
+    stop.setAttribute('offset', s.o);
+    stop.setAttribute('stop-color', s.c);
     grad.appendChild(stop);
   });
-  defs.appendChild(grad); svg.appendChild(defs);
+  defs.appendChild(grad);
+  svgEl_.appendChild(defs);
 
-  /* Track bg */
-  const o1b = arcPoint(0, R_OUTER), o2b = arcPoint(100, R_OUTER);
-  const i1b = arcPoint(0, R_INNER), i2b = arcPoint(100, R_INNER);
-  const bgPath = `M ${o1b.x} ${o1b.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2b.x} ${o2b.y} L ${i2b.x} ${i2b.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1b.x} ${i1b.y} Z`;
-  svg.appendChild(svgEl('path', { d: bgPath, fill: '#F5F6FA', stroke: '#E6E9EF', 'stroke-width': '1' }));
+  const o1 = pt(0, R_OUTER), o2 = pt(100, R_OUTER);
+  const i1 = pt(0, R_INNER), i2 = pt(100, R_INNER);
+  const arc = [
+    `M ${o1.x} ${o1.y}`,
+    `A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y}`,
+    `L ${i2.x} ${i2.y}`,
+    `A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y}`,
+    'Z'
+  ].join(' ');
+  svgEl_.appendChild(svgEl('path', { d: arc, fill: `url(#${gradId})`, opacity: '0.92' }));
 
-  /* Colored arc */
-  const o1 = arcPoint(0, R_OUTER), o2 = arcPoint(100, R_OUTER);
-  const i1 = arcPoint(0, R_INNER), i2 = arcPoint(100, R_INNER);
-  const arcPath = `M ${o1.x} ${o1.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y} Z`;
-  svg.appendChild(svgEl('path', { d: arcPath, fill: `url(#${gradId})`, opacity: '0.88' }));
-
-  /* Ticks */
   [0, 25, 50, 75, 100].forEach(v => {
-    const p1 = arcPoint(v, R_OUTER + 2);
-    const p2 = arcPoint(v, R_OUTER + 9);
-    const pl = arcPoint(v, R_OUTER + 18);
-    svg.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#C5C7D4', 'stroke-width': '1.5' }));
-    const lbl = document.createElementNS(SVG_NS, 'text');
-    Object.entries({ x: pl.x, y: pl.y + 4, 'text-anchor': 'middle', 'font-size': '7', fill: '#C5C7D4', 'font-family': 'Inter, sans-serif', 'font-weight': '500' })
-      .forEach(([k, val]) => lbl.setAttribute(k, val));
-    lbl.textContent = v + unit;
-    svg.appendChild(lbl);
+    const p1 = pt(v, R_OUTER + 3), p2 = pt(v, R_OUTER + 11), pl = pt(v, R_OUTER + 20);
+    svgEl_.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#000000', 'stroke-width': '1.5' }));
+    const txt = document.createElementNS(SVG_NS, 'text');
+    txt.setAttribute('x', pl.x); txt.setAttribute('y', pl.y + 4);
+    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('font-size', '8');
+    txt.setAttribute('fill', '#000000'); txt.setAttribute('font-weight', 'bold');
+    txt.textContent = v + '%';
+    svgEl_.appendChild(txt);
   });
 
-  /* Needle */
-  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#323338', 'stroke-width': '2', 'stroke-linecap': 'round' });
-  svg.appendChild(needle);
-
-  /* Pivot */
-  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '10', fill: '#FFFFFF', stroke: '#E6E9EF', 'stroke-width': '2' }));
-  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '5',  fill: '#004F9F' }));
+  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#000000', 'stroke-width': '3', 'stroke-linecap': 'round' });
+  svgEl_.appendChild(needle);
+  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '8', fill: '#000000' }));
+  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '3.5', fill: '#fff' }));
 
   return needle;
 }
 
-function animateNeedle(needle, kpiEl, targetVal, isTemp = false) {
-  const startTime = performance.now();
-  function frame(now) {
-    const t    = Math.min((now - startTime) / 1200, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    const cur  = ease * targetVal;
-    const p    = arcPoint(cur, G.R_NEEDLE);
-    needle.setAttribute('x2', p.x);
-    needle.setAttribute('y2', p.y);
-    if (kpiEl) {
-      kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
-      kpiEl.style.color = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
+function animateNeedle(needle, kpiEl, targetVal, delay = 0) {
+  const DURATION = 1400;
+  setTimeout(() => {
+    const start = performance.now();
+    function frame(now) {
+      const t = Math.min((now - start) / DURATION, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const cur = ease * targetVal;
+      const p = pt(cur, GAUGE.R_NEEDLE);
+      needle.setAttribute('x2', p.x);
+      needle.setAttribute('y2', p.y);
+      kpiEl.textContent = Math.round(cur) + '%';
+      kpiEl.style.color = kpiColor(cur);
+      if (t < 1) requestAnimationFrame(frame);
     }
-    if (t < 1) requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
+  }, delay);
+}
+
+/* ════════════════════════════════════════════════════════
+   HELPERS DE FECHA
+   ════════════════════════════════════════════════════════ */
+
+/** Formatea una fecha como "DD/MM/AAAA HH:MM:SS" */
+function formatDateTime(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ` +
+         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
+/* ════════════════════════════════════════════════════════
+   API MONDAY.COM
+   ════════════════════════════════════════════════════════ */
+
+async function fetchMondayAPI(query, attempt = 1) {
+  try {
+    const response = await fetch('https://api.monday.com/v2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': CONFIG.API_TOKEN,
+        'API-Version': '2023-10'
+      },
+      body: JSON.stringify({ query })
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+    const data = await response.json();
+    if (data.errors) throw new Error(data.errors.map(e => e.message).join(', '));
+    if (!data.data) throw new Error('Respuesta inesperada de la API.');
+
+    return data;
+
+  } catch (err) {
+    if (attempt < CONFIG.MAX_RETRIES) {
+      console.warn(`Intento ${attempt} fallido. Reintentando en ${CONFIG.RETRY_DELAY_MS}ms...`, err.message);
+      await new Promise(r => setTimeout(r, CONFIG.RETRY_DELAY_MS));
+      return fetchMondayAPI(query, attempt + 1);
+    }
+    throw err;
   }
-  requestAnimationFrame(frame);
 }
 
-/* ────────────────────────── HELPERS ─────────────────────────── */
-const DASH = '—';
+async function fetchAllItems() {
+  const allItems = [];
+  let cursor = null;
 
-function metricRow(label, value, cssClass = '') {
-  return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cssClass}">${value}</span></div>`;
+  do {
+    const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
+    const query = `query {
+      boards(ids: ${CONFIG.BOARD_ID}) {
+        items_page(limit: 100${cursorArg}) {
+          cursor
+          items {
+            id
+            name
+            created_at
+            column_values { id text }
+          }
+        }
+      }
+    }`;
+
+    const data = await fetchMondayAPI(query);
+    const page = data.data.boards[0].items_page;
+    allItems.push(...page.items);
+    cursor = page.cursor || null;
+
+  } while (cursor);
+
+  return allItems;
 }
 
-function badgeHtml(off) {
-  const cls  = off ? 'badge-fuera-servicio' : 'badge-operativo';
-  const text = off ? 'Fuera de servicio' : 'Operativo';
-  return `<span class="status-badge ${cls}">${text}</span>`;
+function parseStatus(rawStatus = '') {
+  const s = rawStatus.toLowerCase().trim();
+  if (s.includes('operativo'))          return 'operativo';
+  if (s.includes('carga parcial'))      return 'carga-parcial';
+  if (s.includes('alarma'))             return 'alarma-activa';
+  if (s.includes('falla'))              return 'falla-critica';
+  return 'fuera-servicio';
 }
 
-/* ────────────────────────── RENDER ──────────────────────────── */
-function renderChiller(ch, index) {
-  const off  = ch.status === 'fuera-servicio';
-  const card = document.createElement('div');
-  card.className = 'card' + (off ? ' card-off' : '');
+const CHILLER_SUB = {
+  'CH001': 'Confort Oficinas',
+  'CH002': 'Confort CR1/CR2',
+  'CH003': 'Confort CR1/CR2',
+  'CH004': 'Proceso CR2',
+  'CH005': 'Proceso CR3',
+  'CH006': 'Confort CR3',
+  'CH007': 'Confort CR3',
+  'CH008': 'Confort CR4',
+  'CH009': 'Confort CR4',
+  'CH010': 'Proceso CR2',
+};
 
-  card.innerHTML = `
-    <div class="card-header">
-      <div><div class="card-title">${ch.name}</div><div class="card-sub">${ch.sub}</div></div>
-      ${badgeHtml(off)}
-    </div>
-    <div class="gauge-wrap"><svg id="svg-ch-${index}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
-    <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-ch-${index}">${off ? DASH : '0%'}</div>
-    <div class="metrics">
-      ${metricRow('Carga', off ? DASH : ch.carga + ' %', off ? '' : (ch.carga > 80 ? 'c-danger' : 'c-normal'))}
-      ${metricRow('T° Salida', off ? DASH : ch.tempOut + ' °F')}
-      ${metricRow('P. Salida', off ? DASH : ch.presOut + ' psi', 'c-warning')}
-    </div>`;
-
-  document.getElementById('grid-chillers').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-ch-${index}`), `grad-ch-${index}`, '%');
-  if (!off) animateNeedle(needle, document.getElementById(`kpi-ch-${index}`), ch.carga, false);
-}
-
-function renderCompresor(cp) {
-  const off  = cp.status === 'fuera-servicio';
-  const card = document.createElement('div');
-  card.className = 'card' + (off ? ' card-off' : '');
-
-  card.innerHTML = `
-    <div class="card-header">
-      <div><div class="card-title">${cp.name}</div><div class="card-sub">${cp.sub}</div></div>
-      ${badgeHtml(off)}
-    </div>
-    <div class="gauge-wrap"><svg id="svg-cp-${cp.id}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
-    <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
-    <div class="metrics">
-      ${metricRow('T° Carga', off ? DASH : cp.tempCarga + ' °F')}
-      ${metricRow('P. Carga', off ? DASH : cp.presCarga + ' psi', 'c-warning')}
-    </div>`;
-
-  document.getElementById('grid-compresores').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
-  if (!off) animateNeedle(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, true);
-}
-
-/* ─────────────────────── TAB NAVIGATION ────────────────────── */
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(`pane-${btn.dataset.tab}`).classList.add('active');
+function parseChillerItem(item, index) {
+  const getVal = (id) => item.column_values.find(c => c.id === id)?.text || '0';
+  const { COL } = CONFIG;
+  const name = item.name.trim().toUpperCase();
+  return {
+    id:      index + 1,
+    name:    name,
+    sub:     CHILLER_SUB[name] || '—',
+    carga:   parseFloat(getVal(COL.CARGA))    || 0,
+    tempOut: parseFloat(getVal(COL.TEMP_OUT)) || 0,
+    tempIn:  parseFloat(getVal(COL.TEMP_IN))  || 0,
+    presOut: parseFloat(getVal(COL.PRES_OUT)) || 0,
+    presIn:  parseFloat(getVal(COL.PRES_IN))  || 0,
+    status:  parseStatus(getVal(COL.STATUS))
   };
-});
-
-/* ─────────────────────── MONDAY.COM API ────────────────────── */
-async function fetchBoardItems() {
-  const res = await fetch('https://api.monday.com/v2', {
-    method : 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': CONFIG.API_TOKEN, 'API-Version': '2023-10' },
-    body: JSON.stringify({ query: `{ boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 50) { items { name column_values { id text } created_at } } } }` })
-  });
-  const json = await res.json();
-  return json.data.boards[0].items_page.items;
 }
 
-/* ────────────────────────── INIT ────────────────────────────── */
+async function getChillersData() {
+  const items = await fetchAllItems();
+
+  const seen = new Map();
+  for (const item of items) {
+    const name = item.name.trim().toUpperCase();
+    if (!CONFIG.CHILLER_NAMES.includes(name)) continue;
+    const existing = seen.get(name);
+    if (!existing || new Date(item.created_at) > new Date(existing.created_at)) {
+      seen.set(name, item);
+    }
+  }
+
+  return Array.from(seen.values())
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(parseChillerItem);
+}
+
+/* ════════════════════════════════════════════════════════
+   RENDERIZADO
+   ════════════════════════════════════════════════════════ */
+
+function buildMetricRow(label, value, cssClass) {
+  return `
+    <div class="mrow">
+      <span class="mlabel">${label}</span>
+      <span class="mval ${cssClass}">${value}</span>
+    </div>`;
+}
+
+function renderCard(ch, idx) {
+  const isOff      = ch.status === 'fuera-servicio';
+  const badgeClass = {
+    'operativo':      'badge-operativo',
+    'carga-parcial':  'badge-carga-parcial',
+    'alarma-activa':  'badge-alarma-activa',
+    'falla-critica':  'badge-falla-critica',
+    'fuera-servicio': 'badge-fuera-servicio',
+  }[ch.status] || 'badge-fuera-servicio';
+  const badgeText = {
+    'operativo':      '● OPERATIVO',
+    'carga-parcial':  '◐ CARGA PARCIAL',
+    'alarma-activa':  '⚠ ALARMA ACTIVA',
+    'falla-critica':  '✕ FALLA CRÍTICA',
+    'fuera-servicio': '○ FUERA DE SERVICIO',
+  }[ch.status] || '○ FUERA DE SERVICIO';
+  const dash       = '—';
+
+  const tempClass  = (v) => v > 60 ? 'c-danger' : 'c-normal';
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-title">${ch.name}</div>
+    <div class="card-sub">${ch.sub}</div>
+    <span class="status-badge ${badgeClass}">${badgeText}</span>
+    <div class="gauge-wrap">
+      <svg id="svg-${ch.id}" width="230" height="135" viewBox="0 0 230 135" overflow="visible"></svg>
+    </div>
+    <div class="kpi-value" id="kpi-${ch.id}" style="color:#000000">${isOff ? dash : '0%'}</div>
+    <div class="metrics">
+      ${buildMetricRow('Carga',     isOff ? dash : ch.carga   + ' %',   isOff ? 'c-off' : colorClass(ch.carga))}
+      ${buildMetricRow('T° Salida', isOff ? dash : ch.tempOut + ' °F',  isOff ? 'c-off' : tempClass(ch.tempOut))}
+      ${buildMetricRow('T° Entrada',isOff ? dash : ch.tempIn  + ' °F',  isOff ? 'c-off' : tempClass(ch.tempIn))}
+      ${buildMetricRow('P. Salida', isOff ? dash : ch.presOut + ' psi', isOff ? 'c-off' : 'c-warning')}
+      ${buildMetricRow('P. Entrada',isOff ? dash : ch.presIn  + ' psi', isOff ? 'c-off' : 'c-warning')}
+    </div>`;
+
+  return card;
+}
+
+function renderDashboard(chillers) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  chillers.forEach((ch, idx) => {
+    const card = renderCard(ch, idx);
+    grid.appendChild(card);
+
+    const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch${ch.id}`);
+    if (ch.status !== 'fuera-servicio') {
+      animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, idx * 100);
+    }
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   CARGA INICIAL – SIN AUTO-REFRESH
+   ════════════════════════════════════════════════════════ */
+
 async function init() {
   const statusEl = document.getElementById('update-status');
   try {
-    const items = await fetchBoardItems();
-    document.getElementById('grid-chillers').innerHTML = '';
-    const filtered = items.filter(i => CONFIG.CHILLER_NAMES.includes(i.name)).slice(0, 10);
-    
-    filtered.forEach((item, i) => {
-      const get = (id) => parseFloat(item.column_values.find(c => c.id === id)?.text || 0);
-      renderChiller({
-        name: item.name, sub: CHILLER_SUB[item.name], carga: get(CONFIG.COL.CARGA), tempOut: get(CONFIG.COL.TEMP_OUT), presOut: get(CONFIG.COL.PRES_OUT),
-        status: item.column_values.find(c => c.id === CONFIG.COL.STATUS)?.text.toLowerCase().includes('operativo') ? 'operativo' : 'fuera-servicio'
-      }, i);
-    });
-    document.getElementById('count-chillers').textContent = `${filtered.length} equipos`;
+    statusEl.textContent = 'CARGANDO DATOS DESDE MONDAY.COM...';
+    const chillers = await getChillersData();
 
-    document.getElementById('grid-compresores').innerHTML = '';
-    STATIC_COMPRESORES.forEach(renderCompresor);
-    document.getElementById('count-compresores').textContent = `${STATIC_COMPRESORES.length} equipos`;
+    if (chillers.length === 0) {
+      statusEl.textContent = 'SIN DATOS DISPONIBLES EN EL TABLERO';
+      return;
+    }
 
-    const ahora = new Date();
-    const dia  = String(ahora.getDate()).padStart(2, '0');
-    const mes  = String(ahora.getMonth() + 1).padStart(2, '0');
-    const año  = String(ahora.getFullYear()).slice(-2);
-    const hora = String(ahora.getHours()).padStart(2, '0');
-    const min  = String(ahora.getMinutes()).padStart(2, '0');
-    statusEl.textContent = `${dia}/${mes}/${año}-${hora}:${min}`;
+    renderDashboard(chillers);
+
+    const units = document.getElementById('grid').children.length;
+    statusEl.textContent = `RECORRIDO DIARIO CHILLER'S ACRELEC· ${formatDateTime(new Date())}`;
 
   } catch (err) {
-    statusEl.textContent = 'Error de conexión';
+    console.error('Error al obtener datos:', err);
+    statusEl.textContent = `ERROR: ${err.message}`;
   }
 }
 
