@@ -3,242 +3,667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento-PDM</title>
+<title>Mantenimiento PDM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f0f4f8; font-family: 'Segoe UI', Roboto, Arial, sans-serif; padding: 24px; color: #000000; }
-  
-  .page-header { text-align: center; margin-bottom: 20px; }
-  .page-header h1 { font-size: 26px; font-weight: 800; text-transform: uppercase; }
-  .page-header p { font-size: 13px; margin-top: 4px; font-weight: 600; }
-
-  .tab-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-  .tab-btn {
-    padding: 10px 25px; border: none; background: #e2e8f0; cursor: pointer;
-    border-radius: 8px; font-weight: 700; text-transform: uppercase; transition: 0.3s;
+  :root {
+    --primary:      #0079F2;
+    --primary-dark: #005EC2;
+    --primary-light:#E8F1FD;
+    --success:      #00C875;
+    --success-bg:   #E6FAF3;
+    --warning:      #FFCB00;
+    --warning-bg:   #FFF9E0;
+    --danger:       #E2445C;
+    --danger-bg:    #FDEEF1;
+    --neutral:      #676879;
+    --neutral-light:#C5C7D4;
+    --bg:           #F5F6FA;
+    --surface:      #FFFFFF;
+    --border:       #E6E9EF;
+    --text-primary: #323338;
+    --text-secondary:#676879;
+    --text-muted:   #C5C7D4;
+    --font:         'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius:       12px;
+    --shadow-sm:    0 1px 4px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
+    --shadow-md:    0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-hover: 0 8px 24px rgba(0,121,242,0.14), 0 2px 8px rgba(0,0,0,0.06);
   }
-  .tab-btn.active { background: #000000; color: #fff; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .topbar-inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 34px; height: 34px;
+    background: var(--primary);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .brand-name span { color: var(--primary); }
+
+  .sync-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .sync-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    flex-shrink: 0;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px 24px 40px;
+  }
+
+  /* ── TABS ── */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    width: fit-content;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: 7px;
+    transition: all 0.18s ease;
+  }
+
+  .tab-btn:hover:not(.active) {
+    background: var(--bg);
+    color: var(--text-primary);
+  }
+
+  .tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,121,242,0.30);
+  }
+
+  .tab-icon { font-size: 14px; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .section-count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 9px;
+    margin-left: 10px;
+  }
+
+  /* ── PANES ── */
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; max-width: 1600px; margin: 0 auto; }
-  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 500px)  { .grid { grid-template-columns: 1fr; } }
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
 
-  .card { background: #ffffff; border-radius: 14px; box-shadow: 0 4px 18px rgba(0,0,0,0.07); padding: 18px 16px 14px; text-align: center; }
-  .card-title { font-size: 15px; font-weight: 700; text-transform: uppercase; }
-  .card-sub { font-size: 10px; margin-bottom: 6px; }
-  .status-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
-  
-  .badge-operativo       { background: #dcfce7; color: #166534; }
-  .badge-fuera-servicio  { background: #f1f5f9; color: #000000; }
+  @media (max-width: 1300px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px)  { .grid { grid-template-columns: 1fr; } }
 
-  .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
-  .kpi-value { font-size: 28px; font-weight: 800; margin-top: -8px; margin-bottom: 8px; }
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px 16px 15px;
+    text-align: center;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
 
-  .metrics { text-align: left; border-top: 1px solid #eeeeee; padding-top: 8px; }
-  .mrow { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #eeeeee; font-size: 11px; }
-  .mlabel { font-weight: 600; }
-  .mval   { font-family: 'Courier New', monospace; font-weight: 700; }
+  /* Left color bar instead of top — matches Fracttal asset status sidebar */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--primary);
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
 
-  .c-normal  { color: #16a34a; }
-  .c-warning { color: #d97706; }
-  .c-danger  { color: #dc2626; }
+  .card.card-off::before { background: var(--neutral-light); }
+
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(0,121,242,0.22);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    text-align: left;
+    padding-left: 4px;
+  }
+
+  .card-title-wrap { flex: 1; min-width: 0; }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.1px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-sub {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── BADGE ── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 6px;
+    letter-spacing: 0.2px;
+  }
+
+  .badge-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .badge-operativo      { background: var(--success-bg); color: #007A4D; }
+  .badge-operativo      .badge-dot { background: var(--success); }
+  .badge-fuera-servicio { background: var(--danger-bg);  color: #B5002E; }
+  .badge-fuera-servicio .badge-dot { background: var(--danger); }
+
+  /* ── GAUGE ── */
+  .gauge-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0 0;
+  }
+
+  /* ── KPI ── */
+  .kpi-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -1px;
+    margin-top: -6px;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .kpi-off {
+    color: var(--text-muted);
+    font-size: 22px;
+  }
+
+  /* ── METRICS ── */
+  .metrics {
+    border-top: 1px solid var(--border);
+    padding-top: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .mrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mlabel {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .mval {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mval-off { color: var(--text-muted) !important; }
+  .c-normal  { color: #007A4D; }
+  .c-warning { color: #9E6700; }
+  .c-danger  { color: #B5002E; }
 </style>
 </head>
 <body>
 
-<div class="page-header">
-  <h1>Mantenimiento – PDM</h1>
-  <p id="update-status">SINCRONIZANDO DATOS...</p>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <div class="brand-icon">⚙️</div>
+      <div class="brand-name">Mantenimiento <span>PDM</span></div>
+    </div>
+    <div class="sync-badge">
+      <span class="sync-dot"></span>
+      <span id="update-status">Sincronizando...</span>
+    </div>
+  </div>
 </div>
 
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('chillers')">Chillers</button>
-  <button class="tab-btn" onclick="switchTab('compresores')">Compresores</button>
-</div>
+<div class="content">
 
-<div id="pane-chillers" class="tab-pane active">
-  <div class="grid" id="grid-chillers"></div>
-</div>
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="chillers">
+      <span class="tab-icon">❄️</span> Chillers
+    </button>
+    <button class="tab-btn" data-tab="compresores">
+      <span class="tab-icon">🔧</span> Compresores
+    </button>
+  </div>
 
-<div id="pane-compresores" class="tab-pane">
-  <div class="grid" id="grid-compresores"></div>
+  <div id="pane-chillers" class="tab-pane active">
+    <div class="section-header">
+      <span class="section-title">Chillers</span>
+      <span class="section-count" id="count-chillers">—</span>
+    </div>
+    <div class="grid" id="grid-chillers"></div>
+  </div>
+
+  <div id="pane-compresores" class="tab-pane">
+    <div class="section-header">
+      <span class="section-title">Compresores</span>
+      <span class="section-count" id="count-compresores">—</span>
+    </div>
+    <div class="grid" id="grid-compresores"></div>
+  </div>
+
 </div>
 
 <script>
+/* ─────────────────────────── CONFIG ─────────────────────────── */
 const CONFIG = {
-  API_TOKEN: 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_ID: '18403987245',
+  API_TOKEN : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
+  BOARD_ID  : '18403987245',
   CHILLER_NAMES: ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COL: { CARGA: 'numeric_mm1h2wdq', TEMP_OUT: 'numeric_mm1fssgs', TEMP_IN: 'numeric_mm1ffh7p', PRES_OUT: 'numeric_mm1fkdjh', PRES_IN: 'numeric_mm1f4rmc', STATUS: 'status' }
+  COL: {
+    CARGA   : 'numeric_mm1h2wdq',
+    TEMP_OUT: 'numeric_mm1fssgs',
+    TEMP_IN : 'numeric_mm1ffh7p',
+    PRES_OUT: 'numeric_mm1fkdjh',
+    PRES_IN : 'numeric_mm1f4rmc',
+    STATUS  : 'status',
+  },
 };
 
-const CHILLER_SUB = { 'CH001': 'Confort Oficinas', 'CH002': 'Confort CR1/CR2', 'CH003': 'Confort CR1/CR2', 'CH004': 'Proceso CR2', 'CH005': 'Proceso CR3', 'CH006': 'Confort CR3', 'CH007': 'Confort CR3', 'CH008': 'Confort CR4', 'CH009': 'Confort CR4', 'CH010': 'Proceso CR2' };
+const CHILLER_SUB = {
+  CH001: 'Confort Oficinas', CH002: 'Confort CR1/CR2', CH003: 'Confort CR1/CR2',
+  CH004: 'Proceso CR2',      CH005: 'Proceso CR3',     CH006: 'Confort CR3',
+  CH007: 'Confort CR3',      CH008: 'Confort CR4',     CH009: 'Confort CR4',
+  CH010: 'Proceso CR2',
+};
 
-/* GAUGE ENGINE */
+const STATIC_COMPRESORES = [
+  { id: 1, name: 'COMP001', sub: 'Aire Comprimido 01', tempCarga: 78,  tempDescarga: 98,  presCarga: 110, presDescarga: 105, status: 'operativo'     },
+  { id: 2, name: 'COMP002', sub: 'Aire Comprimido 02', tempCarga: 84,  tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo'     },
+  { id: 3, name: 'COMP003', sub: 'Aire Comprimido 03', tempCarga: 0,   tempDescarga: 0,   presCarga: 0,   presDescarga: 0,   status: 'fuera-servicio' },
+];
+
+/* ─────────────────────────── GAUGE ──────────────────────────── */
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const GAUGE = { CX: 115, CY: 110, R_OUTER: 94, R_INNER: 62, R_NEEDLE: 86 };
+const G = { CX: 115, CY: 110, R_OUTER: 90, R_INNER: 60, R_NEEDLE: 82 };
 
-function pt(val, r) {
+function arcPoint(val, r) {
   const rad = (180 - (Math.min(val, 100) / 100) * 180) * Math.PI / 180;
-  return { x: GAUGE.CX + r * Math.cos(rad), y: GAUGE.CY - r * Math.sin(rad) };
-}
-
-function buildGauge(svgEl_, gradId, unit = '%') {
-  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = GAUGE;
-  const defs = document.createElementNS(SVG_NS, 'defs');
-  const grad = document.createElementNS(SVG_NS, 'linearGradient');
-  grad.setAttribute('id', gradId);
-  [{ o: '0%', c: '#3DB554' }, { o: '50%', c: '#f59e0b' }, { o: '100%', c: '#ef4444' }].forEach(s => {
-    const stop = document.createElementNS(SVG_NS, 'stop');
-    stop.setAttribute('offset', s.o); stop.setAttribute('stop-color', s.c);
-    grad.appendChild(stop);
-  });
-  defs.appendChild(grad);
-  svgEl_.appendChild(defs);
-  
-  const o1 = pt(0, R_OUTER), o2 = pt(100, R_OUTER), i1 = pt(0, R_INNER), i2 = pt(100, R_INNER);
-  const arc = [`M ${o1.x} ${o1.y}`, `A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y}`, `L ${i2.x} ${i2.y}`, `A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y}`, 'Z'].join(' ');
-  svgEl_.appendChild(svgEl('path', { d: arc, fill: `url(#${gradId})`, opacity: '0.92' }));
-
-  [0, 25, 50, 75, 100].forEach(v => {
-    const p1 = pt(v, R_OUTER + 3), p2 = pt(v, R_OUTER + 11), pl = pt(v, R_OUTER + 20);
-    svgEl_.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#000', 'stroke-width': '1.5' }));
-    const txt = document.createElementNS(SVG_NS, 'text');
-    txt.setAttribute('x', pl.x); txt.setAttribute('y', pl.y + 4); txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('font-size', '8'); txt.setAttribute('fill', '#000'); txt.setAttribute('font-weight', 'bold');
-    txt.textContent = v + unit;
-    svgEl_.appendChild(txt);
-  });
-  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#000', 'stroke-width': '3', 'stroke-linecap': 'round' });
-  svgEl_.appendChild(needle);
-  svgEl_.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '8', fill: '#000' }));
-  return needle;
+  return { x: G.CX + r * Math.cos(rad), y: G.CY - r * Math.sin(rad) };
 }
 
 function svgEl(tag, attrs) {
-  const e = document.createElementNS(SVG_NS, tag);
-  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-  return e;
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+function buildGauge(svg, gradId, unit = '%') {
+  const { CX, CY, R_OUTER, R_INNER, R_NEEDLE } = G;
+
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const grad = document.createElementNS(SVG_NS, 'linearGradient');
+  grad.id = gradId;
+  [{ o: '0%', c: '#00C875' }, { o: '55%', c: '#FFCB00' }, { o: '100%', c: '#E2445C' }]
+    .forEach(({ o, c }) => {
+      const stop = document.createElementNS(SVG_NS, 'stop');
+      stop.setAttribute('offset', o);
+      stop.setAttribute('stop-color', c);
+      grad.appendChild(stop);
+    });
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  /* Track bg */
+  const o1b = arcPoint(0, R_OUTER), o2b = arcPoint(100, R_OUTER);
+  const i1b = arcPoint(0, R_INNER), i2b = arcPoint(100, R_INNER);
+  const bgPath = `M ${o1b.x} ${o1b.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2b.x} ${o2b.y} L ${i2b.x} ${i2b.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1b.x} ${i1b.y} Z`;
+  svg.appendChild(svgEl('path', { d: bgPath, fill: '#F5F6FA', stroke: '#E6E9EF', 'stroke-width': '1' }));
+
+  /* Colored arc */
+  const o1 = arcPoint(0, R_OUTER), o2 = arcPoint(100, R_OUTER);
+  const i1 = arcPoint(0, R_INNER), i2 = arcPoint(100, R_INNER);
+  const arcPath = `M ${o1.x} ${o1.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y} Z`;
+  svg.appendChild(svgEl('path', { d: arcPath, fill: `url(#${gradId})`, opacity: '0.88' }));
+
+  /* Ticks */
+  [0, 25, 50, 75, 100].forEach(v => {
+    const p1 = arcPoint(v, R_OUTER + 2);
+    const p2 = arcPoint(v, R_OUTER + 9);
+    const pl = arcPoint(v, R_OUTER + 18);
+    svg.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#C5C7D4', 'stroke-width': '1.5' }));
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    Object.entries({ x: pl.x, y: pl.y + 4, 'text-anchor': 'middle', 'font-size': '7', fill: '#C5C7D4', 'font-family': 'Inter, sans-serif', 'font-weight': '500' })
+      .forEach(([k, val]) => lbl.setAttribute(k, val));
+    lbl.textContent = v + unit;
+    svg.appendChild(lbl);
+  });
+
+  /* Needle */
+  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - R_NEEDLE, y2: CY, stroke: '#323338', 'stroke-width': '2', 'stroke-linecap': 'round' });
+  svg.appendChild(needle);
+
+  /* Pivot */
+  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '10', fill: '#FFFFFF', stroke: '#E6E9EF', 'stroke-width': '2' }));
+  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '5',  fill: '#0079F2' }));
+
+  return needle;
 }
 
 function animateNeedle(needle, kpiEl, targetVal, isTemp = false) {
-  const start = performance.now();
+  const startTime = performance.now();
   function frame(now) {
-    const t = Math.min((now - start) / 1400, 1);
+    const t    = Math.min((now - startTime) / 1200, 1);
     const ease = 1 - Math.pow(1 - t, 3);
-    const cur = ease * targetVal;
-    const p = pt(cur, GAUGE.R_NEEDLE);
-    needle.setAttribute('x2', p.x); needle.setAttribute('y2', p.y);
-    if(kpiEl) {
+    const cur  = ease * targetVal;
+    const p    = arcPoint(cur, G.R_NEEDLE);
+    needle.setAttribute('x2', p.x);
+    needle.setAttribute('y2', p.y);
+    if (kpiEl) {
       kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
-      kpiEl.style.color = (cur > 85) ? '#dc2626' : (cur > 65 ? '#d97706' : '#16a34a');
+      kpiEl.style.color = cur > 85 ? '#B5002E' : cur > 65 ? '#9E6700' : '#007A4D';
     }
     if (t < 1) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
 
-function switchTab(type) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  document.getElementById(`pane-${type}`).classList.add('active');
-}
+/* ────────────────────────── HELPERS ─────────────────────────── */
+const DASH = '—';
 
-function buildMetricRow(label, value, cssClass) {
+function metricRow(label, value, cssClass = '') {
   return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cssClass}">${value}</span></div>`;
 }
 
-/* RENDER CHILLERS (KPI: CARGA %) */
-function renderChiller(ch) {
-  const isOff = ch.status === 'fuera-servicio';
-  const dash = '—';
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `
-    <div class="card-title">${ch.name}</div>
-    <div class="card-sub">${ch.sub}</div>
-    <span class="status-badge ${isOff ? 'badge-fuera-servicio' : 'badge-operativo'}">${isOff ? '○ FUERA DE SERVICIO' : '● OPERATIVO'}</span>
-    <div class="gauge-wrap"><svg id="svg-ch-${ch.id}" width="230" height="135" viewBox="0 0 230 135"></svg></div>
-    <div class="kpi-value" id="kpi-ch-${ch.id}">${isOff ? dash : '0%'}</div>
-    <div class="metrics">
-      ${buildMetricRow('Carga', isOff ? dash : ch.carga + ' %', isOff ? '' : (ch.carga > 80 ? 'c-danger' : 'c-normal'))}
-      ${buildMetricRow('T° Salida', isOff ? dash : ch.tempOut + ' °F', isOff ? '' : (ch.tempOut > 60 ? 'c-danger' : 'c-normal'))}
-      ${buildMetricRow('T° Entrada', isOff ? dash : ch.tempIn + ' °F', '')}
-      ${buildMetricRow('P. Salida', isOff ? dash : ch.presOut + ' psi', 'c-warning')}
-      ${buildMetricRow('P. Entrada', isOff ? dash : ch.presIn + ' psi', 'c-warning')}
-    </div>`;
-  document.getElementById('grid-chillers').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-ch-${ch.id}`), `grad-ch-${ch.id}`, '%');
-  if (!isOff) animateNeedle(needle, document.getElementById(`kpi-ch-${ch.id}`), ch.carga, false);
+function isOff(status) { return status === 'fuera-servicio'; }
+
+function badgeHtml(off) {
+  const cls  = off ? 'badge-fuera-servicio' : 'badge-operativo';
+  const text = off ? 'Fuera de servicio' : 'Operativo';
+  return `<span class="status-badge ${cls}"><span class="badge-dot"></span>${text}</span>`;
 }
 
-/* RENDER COMPRESORES (KPI: T° CARGA) */
-function renderCompresor(cp) {
-  const isOff = cp.status === 'fuera-servicio';
-  const dash = '—';
+/* ────────────────────────── RENDER ──────────────────────────── */
+function renderChiller(ch, index) {
+  const off  = isOff(ch.status);
   const card = document.createElement('div');
-  card.className = 'card';
+  card.className = 'card' + (off ? ' card-off' : '');
+
+  const cargaClass = off ? 'mval-off' : ch.carga   > 80 ? 'c-danger' : 'c-normal';
+  const tOutClass  = off ? 'mval-off' : ch.tempOut > 60 ? 'c-danger' : '';
+  const tInClass   = off ? 'mval-off' : '';
+  const pClass     = off ? 'mval-off' : 'c-warning';
+
   card.innerHTML = `
-    <div class="card-title">${cp.name}</div>
-    <div class="card-sub">${cp.sub}</div>
-    <span class="status-badge ${isOff ? 'badge-fuera-servicio' : 'badge-operativo'}">${isOff ? '○ FUERA DE SERVICIO' : '● OPERATIVO'}</span>
-    <div class="gauge-wrap"><svg id="svg-cp-${cp.id}" width="230" height="135" viewBox="0 0 230 135"></svg></div>
-    <div class="kpi-value" id="kpi-cp-${cp.id}">${isOff ? dash : '0 °F'}</div>
+    <div class="card-header">
+      <div class="card-title-wrap">
+        <div class="card-title">${ch.name}</div>
+        <div class="card-sub">${ch.sub}</div>
+      </div>
+      ${badgeHtml(off)}
+    </div>
+    <div class="gauge-wrap"><svg id="svg-ch-${index}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
+    <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-ch-${index}">${off ? DASH : '0%'}</div>
     <div class="metrics">
-      ${buildMetricRow('T° Carga', isOff ? dash : cp.tempCarga + ' °F', isOff ? '' : (cp.tempCarga > 85 ? 'c-danger' : 'c-normal'))}
-      ${buildMetricRow('T° Descarga', isOff ? dash : cp.tempDescarga + ' °F', isOff ? '' : (cp.tempDescarga > 95 ? 'c-danger' : 'c-normal'))}
-      ${buildMetricRow('P. Carga', isOff ? dash : cp.presCarga + ' psi', 'c-warning')}
-      ${buildMetricRow('P. Descarga', isOff ? dash : cp.presDescarga + ' psi', 'c-warning')}
+      ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',  cargaClass)}
+      ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F', tOutClass)}
+      ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F', tInClass)}
+      ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', pClass)}
+      ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', pClass)}
     </div>`;
+
+  document.getElementById('grid-chillers').appendChild(card);
+  const needle = buildGauge(document.getElementById(`svg-ch-${index}`), `grad-ch-${index}`, '%');
+  if (!off) animateNeedle(needle, document.getElementById(`kpi-ch-${index}`), ch.carga, false);
+}
+
+function renderCompresor(cp) {
+  const off  = isOff(cp.status);
+  const card = document.createElement('div');
+  card.className = 'card' + (off ? ' card-off' : '');
+
+  const tCargaClass    = off ? 'mval-off' : cp.tempCarga    > 85 ? 'c-danger' : 'c-normal';
+  const tDescargaClass = off ? 'mval-off' : cp.tempDescarga > 95 ? 'c-danger' : 'c-normal';
+  const pClass         = off ? 'mval-off' : 'c-warning';
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="card-title-wrap">
+        <div class="card-title">${cp.name}</div>
+        <div class="card-sub">${cp.sub}</div>
+      </div>
+      ${badgeHtml(off)}
+    </div>
+    <div class="gauge-wrap"><svg id="svg-cp-${cp.id}" width="230" height="130" viewBox="0 0 230 130"></svg></div>
+    <div class="${off ? 'kpi-value kpi-off' : 'kpi-value'}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
+    <div class="metrics">
+      ${metricRow('T° Carga',    off ? DASH : cp.tempCarga    + ' °F', tCargaClass)}
+      ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', tDescargaClass)}
+      ${metricRow('P. Carga',    off ? DASH : cp.presCarga    + ' psi', pClass)}
+      ${metricRow('P. Descarga', off ? DASH : cp.presDescarga + ' psi', pClass)}
+    </div>`;
+
   document.getElementById('grid-compresores').appendChild(card);
   const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
-  if (!isOff) animateNeedle(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, true);
+  if (!off) animateNeedle(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, true);
 }
 
+/* ─────────────────────── TAB NAVIGATION ────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`pane-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+
+/* ─────────────────────── MONDAY.COM API ────────────────────── */
+async function fetchBoardItems() {
+  const res = await fetch('https://api.monday.com/v2', {
+    method : 'POST',
+    headers: {
+      'Content-Type'  : 'application/json',
+      'Authorization' : CONFIG.API_TOKEN,
+      'API-Version'   : '2023-10',
+    },
+    body: JSON.stringify({
+      query: `query { boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 100) { items { name column_values { id text } created_at } } } }`,
+    }),
+  });
+  const json = await res.json();
+  return json.data.boards[0].items_page.items;
+}
+
+function deduplicateByName(items) {
+  const seen = new Map();
+  for (const item of items) {
+    const name = item.name.trim().toUpperCase();
+    if (!CONFIG.CHILLER_NAMES.includes(name)) continue;
+    const existing = seen.get(name);
+    if (!existing || new Date(item.created_at) > new Date(existing.created_at)) {
+      seen.set(name, item);
+    }
+  }
+  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function colVal(item, colId) {
+  return item.column_values.find(c => c.id === colId)?.text ?? '0';
+}
+
+function parseChiller(item, index) {
+  const get        = (id) => parseFloat(colVal(item, id));
+  const statusText = colVal(item, CONFIG.COL.STATUS).toLowerCase();
+  return {
+    id     : index,
+    name   : item.name,
+    sub    : CHILLER_SUB[item.name] ?? 'Sistema PDM',
+    carga  : get(CONFIG.COL.CARGA),
+    tempOut: get(CONFIG.COL.TEMP_OUT),
+    tempIn : get(CONFIG.COL.TEMP_IN),
+    presOut: get(CONFIG.COL.PRES_OUT),
+    presIn : get(CONFIG.COL.PRES_IN),
+    status : statusText.includes('operativo') ? 'operativo' : 'fuera-servicio',
+  };
+}
+
+/* ────────────────────────── INIT ────────────────────────────── */
 async function init() {
+  const statusEl = document.getElementById('update-status');
   try {
-    const res = await fetch('https://api.monday.com/v2', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': CONFIG.API_TOKEN, 'API-Version': '2023-10' },
-      body: JSON.stringify({ query: `query { boards(ids: ${CONFIG.BOARD_ID}) { items_page(limit: 100) { items { name column_values { id text } created_at } } } }` })
-    });
-    const json = await res.json();
-    const items = json.data.boards[0].items_page.items;
-    
-    const seen = new Map();
-    items.forEach(item => {
-      const name = item.name.trim().toUpperCase();
-      if (CONFIG.CHILLER_NAMES.includes(name)) {
-        if (!seen.has(name) || new Date(item.created_at) > new Date(seen.get(name).created_at)) seen.set(name, item);
-      }
-    });
+    const items    = await fetchBoardItems();
+    const chillers = deduplicateByName(items);
+    chillers.forEach((item, i) => renderChiller(parseChiller(item, i), i));
+    STATIC_COMPRESORES.forEach(renderCompresor);
 
-    // Renderizar Chillers
-    Array.from(seen.values()).sort((a,b) => a.name.localeCompare(b.name)).forEach((item, idx) => {
-      const getV = (id) => item.column_values.find(c => c.id === id)?.text || '0';
-      renderChiller({
-        id: idx, name: item.name, sub: CHILLER_SUB[item.name] || 'SISTEMA PDM',
-        carga: parseFloat(getV(CONFIG.COL.CARGA)), tempOut: parseFloat(getV(CONFIG.COL.TEMP_OUT)),
-        tempIn: parseFloat(getV(CONFIG.COL.TEMP_IN)), presOut: parseFloat(getV(CONFIG.COL.PRES_OUT)),
-        presIn: parseFloat(getV(CONFIG.COL.PRES_IN)), status: getV('status').toLowerCase().includes('operativo') ? 'operativo' : 'fuera-servicio'
-      });
-    });
-
-    // Renderizar Compresores (COMP001, COMP002, COMP003)
-    const compresores = [
-      { id: 1, name: 'COMP001', sub: 'AIRE COMPRIMIDO 01', tempCarga: 78, tempDescarga: 98, presCarga: 110, presDescarga: 105, status: 'operativo' },
-      { id: 2, name: 'COMP002', sub: 'AIRE COMPRIMIDO 02', tempCarga: 84, tempDescarga: 104, presCarga: 115, presDescarga: 108, status: 'operativo' },
-      { id: 3, name: 'COMP003', sub: 'AIRE COMPRIMIDO 03', tempCarga: 0, tempDescarga: 0, presCarga: 0, presDescarga: 0, status: 'fuera-servicio' }
-    ];
-    compresores.forEach(renderCompresor);
-
-    document.getElementById('update-status').textContent = `RECORRIDO DIARIO: ${new Date().toLocaleString()}`;
+    document.getElementById('count-chillers').textContent    = `${chillers.length} equipos`;
+    document.getElementById('count-compresores').textContent = `${STATIC_COMPRESORES.length} equipos`;
+    statusEl.textContent = `Actualizado: ${new Date().toLocaleTimeString()}`;
   } catch (err) {
-    document.getElementById('update-status').textContent = `ERROR DE CONEXIÓN AL SISTEMA`;
+    console.error(err);
+    statusEl.textContent = 'Error de conexión';
+    document.querySelector('.sync-dot').style.background = '#E2445C';
+    document.querySelector('.sync-dot').style.animation  = 'none';
   }
 }
 
