@@ -117,6 +117,13 @@
     gap: 20px;
   }
 
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  }
+
   .card {
     background: var(--surface); border-radius: var(--radius);
     border: 1px solid var(--border); padding: 18px 16px 15px;
@@ -497,7 +504,8 @@ async function init() {
     STATIC_COMPRESORES.forEach((cp, i) => renderCard(cp, 'grid-compresores', false, i * 80));
 
     const now = new Date();
-    statusEl.textContent = `Actualizado: ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const pad = n => String(n).padStart(2,'0');
+    statusEl.textContent = `Actualizado: ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}-${pad(now.getHours())}:${pad(now.getMinutes())}`;
     dot.className = 'sync-dot';
 
   } catch (err) {
