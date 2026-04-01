@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento PDM </title>
+<title>Mantenimiento PDM</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -18,7 +18,7 @@
     --danger-bg:     #FCEAE9;
     --neutral:       #676879;
     --neutral-light: #C5C7D4;
-    --bg:            #F9FAFB;
+    --bg:             #F9FAFB;
     --surface:       #FFFFFF;
     --border:        #E6E9EF;
     --text-primary:  #323338;
@@ -82,21 +82,13 @@
 
   @media (max-width: 768px) {
     .tab-nav {
-      position: sticky;
-      top: 60px;
-      z-index: 90;
-      width: 100%;
-      border-radius: 0;
+      position: sticky; top: 60px; z-index: 90;
+      width: 100%; border-radius: 0;
       border-left: none; border-right: none; border-top: none;
-      margin-bottom: 0;
-      justify-content: center;
+      margin-bottom: 0; justify-content: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .tab-btn {
-      flex: 1; justify-content: center;
-      padding: 10px 12px;
-      font-size: 13px;
-    }
+    .tab-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
     .content { padding: 0; }
     .tab-pane.active { padding: 16px; }
   }
@@ -105,15 +97,11 @@
   .tab-pane.active { display: block; }
 
   .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
   }
 
   @media (max-width: 768px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .card { padding: 12px 10px 10px; }
     .card-title { font-size: 12px; }
     .card-sub   { font-size: 10px; }
@@ -150,9 +138,9 @@
   }
   .badge-operativo      { background: var(--success-bg);  color: #007D43; }
   .badge-carga-parcial  { background: var(--warning-bg);  color: #BF8900; }
-  .badge-alarma-activa  { background: #FFF0E0;             color: #C05800; }
-  .badge-falla-critica  { background: var(--danger-bg);   color: #B9251C; }
-  .badge-fuera-servicio { background: #F1F3F6;             color: #676879; }
+  .badge-alarma-activa  { background: #FFF0E0;              color: #C05800; }
+  .badge-falla-critica  { background: var(--danger-bg);    color: #B9251C; }
+  .badge-fuera-servicio { background: #F1F3F6;              color: #676879; }
 
   .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
   .gauge-wrap svg { max-width: 100%; height: auto; }
@@ -211,25 +199,36 @@
   </div>
 
   <div id="pane-compresores" class="tab-pane">
-    <div class="grid" id="grid-compresores"></div>
+    <div class="grid" id="grid-compresores">
+      <div class="loading-state"><div class="spinner"></div><span>Conectando con Monday.com…</span></div>
+    </div>
   </div>
 </div>
 
 <script>
 const CONFIG = {
   API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_ID:       '18403987245',
-  REFRESH_MS:     60_000,
-  MAX_RETRIES:    3,
+  BOARD_CHILLERS: '18403987245',
+  BOARD_COMPRESORES: '18406608853',
+  REFRESH_MS:      60_000,
+  MAX_RETRIES:     3,
   RETRY_DELAY_MS: 3_000,
-  CHILLER_NAMES:  ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COL: {
+  CHILLER_NAMES:   ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
+  COMPRESOR_NAMES: ['COMP001','COMP002','COMP003'],
+  COL_CH: {
     CARGA:    'numeric_mm1h2wdq',
     TEMP_OUT: 'numeric_mm1fssgs',
     TEMP_IN:  'numeric_mm1ffh7p',
     PRES_OUT: 'numeric_mm1fkdjh',
     PRES_IN:  'numeric_mm1f4rmc',
     STATUS:   'status',
+  },
+  COL_CP: {
+    STATUS:         'status',
+    TEMP_CARGA:    'numeric_mm1zfxhc',
+    TEMP_DESCARGA: 'numeric_mm1zwzac',
+    PRES_CARGA:    'numeric_mm1zvqry',
+    PRES_DESCARGA: 'numeric_mm1zmfy0',
   }
 };
 
@@ -240,13 +239,13 @@ const CHILLER_SUB = {
   CH010:'Proceso CR2'
 };
 
-const STATIC_COMPRESORES = [
-  { id:101, name:'COMP001', sub:'Aire Comprimido 01', tempCarga:78,  status:'operativo',      presCarga:110 },
-  { id:102, name:'COMP002', sub:'Aire Comprimido 02', tempCarga:84,  status:'operativo',      presCarga:115 },
-  { id:103, name:'COMP003', sub:'Aire Comprimido 03', tempCarga:0,   status:'fuera-servicio', presCarga:0   }
-];
+const COMPRESOR_SUB = {
+  COMP001:'Compresor CR1', 
+  COMP002:'Compresor CR3', 
+  COMP003:'Compresor CR4'
+};
 
-/* ── GAUGE: dimensiones compactas ── */
+/* ── GAUGE ── */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const G = { CX:115, CY:85, R_OUTER:78, R_INNER:52, R_NEEDLE:70 };
 
@@ -308,6 +307,28 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   }, delay);
 }
 
+function animateNeedleTemp(needle, kpiEl, targetTemp, maxTemp, delay=0) {
+  const targetPct = Math.min((targetTemp / maxTemp) * 100, 100);
+  setTimeout(() => {
+    const start = performance.now();
+    function frame(now) {
+      const t = Math.min((now-start)/1200, 1);
+      const ease = 1 - Math.pow(1-t, 3);
+      const curPct = ease * targetPct;
+      const curTemp = Math.round(ease * targetTemp);
+      const p = pt(curPct, G.R_NEEDLE);
+      needle.setAttribute('x2', p.x);
+      needle.setAttribute('y2', p.y);
+      if (kpiEl) {
+        kpiEl.textContent = curTemp + ' °F';
+        kpiEl.style.color = curPct > 80 ? '#D93025' : curPct > 55 ? '#BF8900' : '#007D43';
+      }
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }, delay);
+}
+
 async function fetchMondayAPI(query, attempt=1) {
   try {
     const res = await fetch('https://api.monday.com/v2', {
@@ -333,13 +354,13 @@ async function fetchMondayAPI(query, attempt=1) {
   }
 }
 
-async function fetchAllItems() {
+async function fetchAllItemsFromBoard(boardId) {
   const allItems = [];
   let cursor = null;
   do {
     const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
     const query = `query {
-      boards(ids: ${CONFIG.BOARD_ID}) {
+      boards(ids: ${boardId}) {
         items_page(limit: 100${cursorArg}) {
           cursor
           items { id name created_at column_values { id text } }
@@ -364,7 +385,6 @@ function parseStatus(raw='') {
 }
 
 const DASH = '—';
-
 const STATUS_CARD = {
   'operativo':      '',
   'carga-parcial':  'card-warn',
@@ -388,13 +408,13 @@ const STATUS_LABEL = {
 };
 
 function colorClass(val) { return val > 80 ? 'c-danger' : val > 50 ? 'c-warning' : 'c-normal'; }
-function tempClass(v)    { return v > 60   ? 'c-danger' : 'c-normal'; }
+function tempClass(v)    { return v > 110   ? 'c-danger' : 'c-normal'; }
 
 function metricRow(label, value, cls='') {
   return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${value}</span></div>`;
 }
 
-function renderCard(ch, containerId, isChiller=true, delay=0) {
+function renderChillerCard(ch, delay=0) {
   const off = ch.status === 'fuera-servicio';
   const card = document.createElement('div');
   card.className = `card ${STATUS_CARD[ch.status]||''}`.trim();
@@ -414,34 +434,48 @@ function renderCard(ch, containerId, isChiller=true, delay=0) {
     </div>
     <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
     <div class="metrics">
-      ${isChiller ? `
-        ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
-        ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : tempClass(ch.tempOut))}
-        ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F',  off ? 'c-off' : tempClass(ch.tempIn))}
-        ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', off ? 'c-off' : 'c-warning')}
-        ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', off ? 'c-off' : 'c-warning')}
-      ` : `
-        ${metricRow('T° Carga',  off ? DASH : ch.tempCarga + ' °F', off ? 'c-off' : tempClass(ch.tempCarga))}
-        ${metricRow('P. Carga',  off ? DASH : ch.presCarga + ' psi','c-warning')}
-      `}
+      ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
+      ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : 'c-normal')}
+      ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F',  off ? 'c-off' : 'c-normal')}
+      ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', off ? 'c-off' : 'c-warning')}
+      ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', off ? 'c-off' : 'c-warning')}
     </div>`;
 
-  document.getElementById(containerId).appendChild(card);
+  document.getElementById('grid-chillers').appendChild(card);
+  const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch-${ch.id}`, '%');
+  if (!off) animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, false, delay);
+}
 
-  const needle = buildGauge(
-    document.getElementById(`svg-${ch.id}`),
-    `grad-${ch.id}`,
-    isChiller ? '%' : '°F'
-  );
-  if (!off) {
-    animateNeedle(
-      needle,
-      document.getElementById(`kpi-${ch.id}`),
-      isChiller ? ch.carga : ch.tempCarga,
-      !isChiller,
-      delay
-    );
-  }
+function renderCompresorCard(cp, delay=0) {
+  const off = cp.status === 'fuera-servicio';
+  const card = document.createElement('div');
+  card.className = `card ${STATUS_CARD[cp.status]||''}`.trim();
+  const MAX_TEMP = 150;
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div>
+        <div class="card-title">${cp.name}</div>
+        <div class="card-sub">${cp.sub}</div>
+      </div>
+      <span class="status-badge ${STATUS_BADGE[cp.status]||'badge-fuera-servicio'}">
+        ${STATUS_LABEL[cp.status]||'○ Fuera de Servicio'}
+      </span>
+    </div>
+    <div class="gauge-wrap">
+      <svg id="svg-cp-${cp.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+    </div>
+    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
+    <div class="metrics">
+      ${metricRow('T° Carga',     off ? DASH : cp.tempCarga    + ' °F', off ? 'c-off' : tempClass(cp.tempCarga))}
+      ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', off ? 'c-off' : tempClass(cp.tempDescarga))}
+      ${metricRow('P. Carga',     off ? DASH : cp.presCarga    + ' psi', off ? 'c-off' : 'c-warning')}
+      ${metricRow('P. Descarga', off ? DASH : cp.presDescarga + ' psi', off ? 'c-off' : 'c-warning')}
+    </div>`;
+
+  document.getElementById('grid-compresores').appendChild(card);
+  const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
+  if (!off) animateNeedleTemp(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, MAX_TEMP, delay);
 }
 
 async function init() {
@@ -451,42 +485,68 @@ async function init() {
   dot.className = 'sync-dot';
 
   try {
-    const rawItems = await fetchAllItems();
-    const latestMap = new Map();
+    const [chillerItems, compresorItems] = await Promise.all([
+      fetchAllItemsFromBoard(CONFIG.BOARD_CHILLERS),
+      fetchAllItemsFromBoard(CONFIG.BOARD_COMPRESORES)
+    ]);
 
-    rawItems.forEach(item => {
+    /* ── Render Chillers ── */
+    const latestCH = new Map();
+    chillerItems.forEach(item => {
       const name = item.name.trim().toUpperCase();
       if (!CONFIG.CHILLER_NAMES.includes(name)) return;
-      if (!latestMap.has(name) || new Date(item.created_at) > new Date(latestMap.get(name).created_at))
-        latestMap.set(name, item);
+      if (!latestCH.has(name) || new Date(item.created_at) > new Date(latestCH.get(name).created_at))
+        latestCH.set(name, item);
     });
 
     const gridCH = document.getElementById('grid-chillers');
     gridCH.innerHTML = '';
     CONFIG.CHILLER_NAMES.forEach((name, i) => {
-      const item = latestMap.get(name);
+      const item = latestCH.get(name);
       if (!item) return;
       const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
-      renderCard({
-        id:      i,
-        name,
-        sub:     CHILLER_SUB[name] || 'Equipo',
-        carga:   getVal(CONFIG.COL.CARGA),
-        tempOut: getVal(CONFIG.COL.TEMP_OUT),
-        tempIn:  getVal(CONFIG.COL.TEMP_IN),
-        presOut: getVal(CONFIG.COL.PRES_OUT),
-        presIn:  getVal(CONFIG.COL.PRES_IN),
-        status:  parseStatus(item.column_values.find(c=>c.id===CONFIG.COL.STATUS)?.text)
-      }, 'grid-chillers', true, i * 80);
+      renderChillerCard({
+        id: i, name, sub: CHILLER_SUB[name] || 'Equipo',
+        carga: getVal(CONFIG.COL_CH.CARGA),
+        tempOut: getVal(CONFIG.COL_CH.TEMP_OUT),
+        tempIn:  getVal(CONFIG.COL_CH.TEMP_IN),
+        presOut: getVal(CONFIG.COL_CH.PRES_OUT),
+        presIn:  getVal(CONFIG.COL_CH.PRES_IN),
+        status:  parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CH.STATUS)?.text)
+      }, i * 80);
+    });
+
+    /* ── Render Compresores (Filtrados) ── */
+    const latestCP = new Map();
+    compresorItems.forEach(item => {
+      const name = item.name.trim().toUpperCase();
+      if (!CONFIG.COMPRESOR_NAMES.includes(name)) return;
+      if (!latestCP.has(name) || new Date(item.created_at) > new Date(latestCP.get(name).created_at))
+        latestCP.set(name, item);
     });
 
     const gridCP = document.getElementById('grid-compresores');
     gridCP.innerHTML = '';
-    STATIC_COMPRESORES.forEach((cp, i) => renderCard(cp, 'grid-compresores', false, i * 80));
+
+    CONFIG.COMPRESOR_NAMES.forEach((name, i) => {
+      const item = latestCP.get(name);
+      if (!item) return;
+      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      renderCompresorCard({
+        id: 'cp' + i,
+        name,
+        sub: COMPRESOR_SUB[name] || 'Equipo',
+        tempCarga:    getVal(CONFIG.COL_CP.TEMP_CARGA),
+        tempDescarga: getVal(CONFIG.COL_CP.TEMP_DESCARGA),
+        presCarga:    getVal(CONFIG.COL_CP.PRES_CARGA),
+        presDescarga: getVal(CONFIG.COL_CP.PRES_DESCARGA),
+        status:       parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CP.STATUS)?.text)
+      }, i * 80);
+    });
 
     const now = new Date();
     const pad = n => String(n).padStart(2,'0');
-    statusEl.textContent = ` ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}-${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    statusEl.textContent = ` ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
     dot.className = 'sync-dot';
 
   } catch (err) {
