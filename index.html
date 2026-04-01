@@ -18,7 +18,7 @@
     --danger-bg:     #FCEAE9;
     --neutral:       #676879;
     --neutral-light: #C5C7D4;
-    --bg:              #F9FAFB;
+    --bg:            #F9FAFB;
     --surface:       #FFFFFF;
     --border:        #E6E9EF;
     --text-primary:  #323338;
@@ -33,6 +33,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
+  /* ── TOPBAR ── */
   .topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -58,13 +59,11 @@
     border-radius: 20px; padding: 5px 12px;
     font-size: 11px; font-weight: 500; color: var(--text-secondary);
   }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--success); animation: blink 2s infinite;
-  }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: blink 2s infinite; }
   .sync-dot.error { background: var(--danger); animation: none; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+  /* ── LAYOUT ── */
   .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
 
   .tab-nav {
@@ -80,6 +79,73 @@
   }
   .tab-btn.active { background: var(--primary); color: #fff; }
 
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 18px 16px 15px;
+    transition: 0.2s; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden; text-align: center;
+  }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--primary); }
+  .card.card-off::before   { background: var(--neutral-light); }
+  .card.card-warn::before  { background: var(--warning); }
+  .card.card-alarm::before { background: #FF8C00; }
+  .card.card-fail::before  { background: var(--danger); }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
+  .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .card-sub    { font-size: 11px; color: var(--text-secondary); }
+
+  /* ── BADGES ── */
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap;
+  }
+  .badge-operativo      { background: var(--success-bg); color: #007D43; }
+  .badge-carga-parcial  { background: var(--warning-bg); color: #BF8900; }
+  .badge-alarma-activa  { background: #FFF0E0;            color: #C05800; }
+  .badge-falla-critica  { background: var(--danger-bg);  color: #B9251C; }
+  .badge-fuera-servicio { background: #F1F3F6;            color: #676879; }
+  .badge-standby        { background: #E6F0F9;            color: #004F9F; }
+
+  /* ── GAUGE & KPI ── */
+  .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
+  .gauge-wrap svg { max-width: 100%; height: auto; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
+  .kpi-off   { color: var(--text-muted); font-size: 22px; }
+
+  /* ── METRICS ── */
+  .metrics { border-top: 1px solid var(--border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+  .mrow    { display: flex; justify-content: space-between; align-items: center; }
+  .mlabel  { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+  .mval    { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+
+  .c-normal  { color: #007D43; }
+  .c-warning { color: #BF8900; }
+  .c-danger  { color: #B9251C; }
+  .c-off     { color: var(--text-muted); }
+
+  /* ── LOADING ── */
+  .loading-state {
+    grid-column: 1/-1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 260px; gap: 12px;
+    color: var(--text-secondary); font-size: 13px; font-weight: 500;
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border); border-top-color: var(--primary);
+    border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── RESPONSIVE MÓVIL ── */
   @media (max-width: 768px) {
     .tab-nav {
       position: sticky; top: 60px; z-index: 90;
@@ -91,74 +157,17 @@
     .tab-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
     .content { padding: 0; }
     .tab-pane.active { padding: 16px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .card { padding: 12px 10px 10px; }
+    .card-title { font-size: 12px; }
+    .card-sub   { font-size: 10px; }
+    .status-badge { font-size: 8px; padding: 2px 6px; }
+    .kpi-value  { font-size: 20px; margin-top: -4px; margin-bottom: 8px; }
+    .kpi-off    { font-size: 18px; }
+    .mlabel     { font-size: 10px; }
+    .mval       { font-size: 11px; }
+    .metrics    { gap: 6px; }
   }
-
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-  }
-
-  .card {
-    background: var(--surface); border-radius: var(--radius);
-    border: 1px solid var(--border); padding: 18px 16px 15px;
-    transition: 0.2s; box-shadow: var(--shadow-sm);
-    position: relative; overflow: hidden; text-align: center;
-  }
-  .card::before {
-    content: ''; position: absolute; top: 0; left: 0; bottom: 0;
-    width: 4px; background: var(--primary);
-  }
-  .card.card-off::before    { background: var(--neutral-light); }
-  .card.card-warn::before   { background: var(--warning); }
-  .card.card-alarm::before  { background: #FF8C00; }
-  .card.card-fail::before   { background: var(--danger); }
-  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
-  .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
-  .card-sub    { font-size: 11px; color: var(--text-secondary); }
-
-  .status-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
-    white-space: nowrap;
-  }
-  .badge-operativo      { background: var(--success-bg);  color: #007D43; }
-  .badge-carga-parcial  { background: var(--warning-bg);  color: #BF8900; }
-  .badge-alarma-activa  { background: #FFF0E0;              color: #C05800; }
-  .badge-falla-critica  { background: var(--danger-bg);    color: #B9251C; }
-  .badge-fuera-servicio { background: #F1F3F6;              color: #676879; }
-  .badge-standby        { background: #E6F0F9;              color: #004F9F; }
-
-  .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
-  .gauge-wrap svg { max-width: 100%; height: auto; }
-  .kpi-value  { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
-  .kpi-off    { color: var(--text-muted); font-size: 22px; }
-
-  .metrics { border-top: 1px solid var(--border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
-  .mrow    { display: flex; justify-content: space-between; align-items: center; }
-  .mlabel  { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
-  .mval    { font-size: 12px; font-weight: 700; color: var(--text-primary); }
-
-  .c-normal  { color: #007D43; }
-  .c-warning { color: #BF8900; }
-  .c-danger  { color: #B9251C; }
-  .c-off     { color: var(--text-muted); }
-
-  .loading-state {
-    grid-column: 1/-1;
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; min-height: 260px; gap: 12px;
-    color: var(--text-secondary); font-size: 13px; font-weight: 500;
-  }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid var(--border); border-top-color: var(--primary);
-    border-radius: 50%; animation: spin .8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -198,10 +207,10 @@
 <script>
 const CONFIG = {
   API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_CHILLERS: '18403987245',
+  BOARD_CHILLERS:    '18403987245',
   BOARD_COMPRESORES: '18406608853',
-  REFRESH_MS:      60_000,
-  MAX_RETRIES:      3,
+  REFRESH_MS:     60_000,
+  MAX_RETRIES:    3,
   RETRY_DELAY_MS: 3_000,
   CHILLER_NAMES:   ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
   COMPRESOR_NAMES: ['COMP001','COMP002','COMP003'],
@@ -214,10 +223,10 @@ const CONFIG = {
     STATUS:   'status',
   },
   COL_CP: {
-    STATUS:          'status',
-    TEMP_CARGA:     'numeric_mm1zfxhc',
+    STATUS:       'status',
+    TEMP_CARGA:    'numeric_mm1zfxhc',
     TEMP_DESCARGA: 'numeric_mm1zwzac',
-    PRES_CARGA:     'numeric_mm1zvqry',
+    PRES_CARGA:    'numeric_mm1zvqry',
     PRES_DESCARGA: 'numeric_mm1zmfy0',
   }
 };
@@ -228,14 +237,13 @@ const CHILLER_SUB = {
   CH007:'Confort CR3',      CH008:'Confort CR4',     CH009:'Confort CR4',
   CH010:'Proceso CR2'
 };
-
 const COMPRESOR_SUB = {
-  COMP001:'Compresor CR1', 
-  COMP002:'Compresor CR3', 
+  COMP001:'Compresor CR1',
+  COMP002:'Compresor CR3',
   COMP003:'Compresor CR4'
 };
 
-/* ── GAUGE ── */
+/* ══════════ GAUGE ══════════ */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const G = { CX:115, CY:85, R_OUTER:78, R_INNER:52, R_NEEDLE:70 };
 
@@ -248,7 +256,6 @@ function svgEl(tag, attrs) {
   for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
   return el;
 }
-
 function buildGauge(svg, gradId, unit='%') {
   const { CX, CY, R_OUTER, R_INNER } = G;
   const defs = document.createElementNS(SVG_NS,'defs');
@@ -257,26 +264,24 @@ function buildGauge(svg, gradId, unit='%') {
     grad.appendChild(svgEl('stop',{ offset:s.o, 'stop-color':s.c }))
   );
   defs.appendChild(grad); svg.appendChild(defs);
-
   const o1=pt(0,R_OUTER), o2=pt(100,R_OUTER), i1=pt(0,R_INNER), i2=pt(100,R_INNER);
   const arcD = `M ${o1.x} ${o1.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y} Z`;
   svg.appendChild(svgEl('path',{ d:arcD, fill:'#F5F6FA', stroke:'#E6E9EF', 'stroke-width':'1' }));
   svg.appendChild(svgEl('path',{ d:arcD, fill:`url(#${gradId})`, opacity:'0.85' }));
-
   [0,25,50,75,100].forEach(v => {
     const p1=pt(v,R_OUTER+2), p2=pt(v,R_OUTER+8), pl=pt(v,R_OUTER+16);
     svg.appendChild(svgEl('line',{ x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,stroke:'#C5C7D4','stroke-width':'1.5' }));
     const lbl = svgEl('text',{ x:pl.x,y:pl.y+4,'text-anchor':'middle','font-size':'8',fill:'#676879','font-family':'Inter','font-weight':'600' });
     lbl.textContent = v+unit; svg.appendChild(lbl);
   });
-
   const needle = svgEl('line',{ x1:CX,y1:CY,x2:CX-G.R_NEEDLE,y2:CY,stroke:'#323338','stroke-width':'2.5','stroke-linecap':'round' });
   svg.appendChild(needle);
   svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'9',fill:'#FFFFFF',stroke:'#E6E9EF','stroke-width':'2' }));
-  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'4', fill:'#004F9F' }));
+  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'4',fill:'#004F9F' }));
   return needle;
 }
 
+/* Aguja para % */
 function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   setTimeout(() => {
     const start = performance.now();
@@ -285,11 +290,10 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
       const ease = 1 - Math.pow(1-t, 3);
       const cur = ease * targetVal;
       const p = pt(cur, G.R_NEEDLE);
-      needle.setAttribute('x2', p.x);
-      needle.setAttribute('y2', p.y);
+      needle.setAttribute('x2', p.x); needle.setAttribute('y2', p.y);
       if (kpiEl) {
         kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
-        kpiEl.style.color  = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
+        kpiEl.style.color = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
       }
       if (t < 1) requestAnimationFrame(frame);
     }
@@ -297,6 +301,7 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   }, delay);
 }
 
+/* Aguja para temperatura (escala relativa a maxTemp) */
 function animateNeedleTemp(needle, kpiEl, targetTemp, maxTemp, delay=0) {
   const targetPct = Math.min((targetTemp / maxTemp) * 100, 100);
   setTimeout(() => {
@@ -304,11 +309,10 @@ function animateNeedleTemp(needle, kpiEl, targetTemp, maxTemp, delay=0) {
     function frame(now) {
       const t = Math.min((now-start)/1200, 1);
       const ease = 1 - Math.pow(1-t, 3);
-      const curPct = ease * targetPct;
+      const curPct  = ease * targetPct;
       const curTemp = Math.round(ease * targetTemp);
       const p = pt(curPct, G.R_NEEDLE);
-      needle.setAttribute('x2', p.x);
-      needle.setAttribute('y2', p.y);
+      needle.setAttribute('x2', p.x); needle.setAttribute('y2', p.y);
       if (kpiEl) {
         kpiEl.textContent = curTemp + ' °F';
         kpiEl.style.color = curPct > 80 ? '#D93025' : curPct > 55 ? '#BF8900' : '#007D43';
@@ -319,15 +323,12 @@ function animateNeedleTemp(needle, kpiEl, targetTemp, maxTemp, delay=0) {
   }, delay);
 }
 
+/* ══════════ API MONDAY ══════════ */
 async function fetchMondayAPI(query, attempt=1) {
   try {
     const res = await fetch('https://api.monday.com/v2', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': CONFIG.API_TOKEN,
-        'API-Version':   '2023-10'
-      },
+      headers: { 'Content-Type':'application/json', 'Authorization':CONFIG.API_TOKEN, 'API-Version':'2023-10' },
       body: JSON.stringify({ query })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -365,8 +366,9 @@ async function fetchAllItemsFromBoard(boardId) {
   return allItems;
 }
 
+/* ══════════ HELPERS ══════════ */
 function parseStatus(raw='') {
-  const s = raw.toLowerCase().trim();
+  const s = (raw||'').toLowerCase().trim();
   if (s.includes('operativo'))     return 'operativo';
   if (s.includes('carga parcial')) return 'carga-parcial';
   if (s.includes('alarma'))        return 'alarma-activa';
@@ -377,37 +379,27 @@ function parseStatus(raw='') {
 
 const DASH = '—';
 const STATUS_CARD = {
-  'operativo':      '',
-  'carga-parcial':  'card-warn',
-  'alarma-activa':  'card-alarm',
-  'falla-critica':  'card-fail',
-  'fuera-servicio': 'card-off',
-  'standby':        'card-off',
+  'operativo':'', 'carga-parcial':'card-warn', 'alarma-activa':'card-alarm',
+  'falla-critica':'card-fail', 'fuera-servicio':'card-off', 'standby':'card-off'
 };
 const STATUS_BADGE = {
-  'operativo':      'badge-operativo',
-  'carga-parcial':  'badge-carga-parcial',
-  'alarma-activa':  'badge-alarma-activa',
-  'falla-critica':  'badge-falla-critica',
-  'fuera-servicio': 'badge-fuera-servicio',
-  'standby':        'badge-standby',
+  'operativo':'badge-operativo', 'carga-parcial':'badge-carga-parcial',
+  'alarma-activa':'badge-alarma-activa', 'falla-critica':'badge-falla-critica',
+  'fuera-servicio':'badge-fuera-servicio', 'standby':'badge-standby'
 };
 const STATUS_LABEL = {
-  'operativo':      '● Operativo',
-  'carga-parcial':  '◐ Carga Parcial',
-  'alarma-activa':  '⚠ Alarma Activa',
-  'falla-critica':  '✕ Falla Crítica',
-  'fuera-servicio': '○ Fuera de Servicio',
-  'standby':        '💤 Standby',
+  'operativo':'● Operativo', 'carga-parcial':'◐ Carga Parcial',
+  'alarma-activa':'⚠ Alarma Activa', 'falla-critica':'✕ Falla Crítica',
+  'fuera-servicio':'○ Fuera de Servicio', 'standby':'💤 Standby'
 };
 
-function colorClass(val) { return val > 80 ? 'c-danger' : val > 50 ? 'c-warning' : 'c-normal'; }
-function tempClass(v)    { return v > 110   ? 'c-danger' : 'c-normal'; }
-
-function metricRow(label, value, cls='') {
-  return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${value}</span></div>`;
+function colorClass(v) { return v > 80 ? 'c-danger' : v > 50 ? 'c-warning' : 'c-normal'; }
+function tempClass(v)   { return v > 110 ? 'c-danger' : 'c-normal'; }
+function mr(label, val, cls='') {
+  return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${val}</span></div>`;
 }
 
+/* ══════════ RENDER CHILLERS ══════════ */
 function renderChillerCard(ch, delay=0) {
   const off = ch.status === 'fuera-servicio' || ch.status === 'standby';
   const card = document.createElement('div');
@@ -415,43 +407,38 @@ function renderChillerCard(ch, delay=0) {
 
   card.innerHTML = `
     <div class="card-header">
-      <div>
-        <div class="card-title">${ch.name}</div>
-        <div class="card-sub">${ch.sub}</div>
-      </div>
+      <div><div class="card-title">${ch.name}</div><div class="card-sub">${ch.sub}</div></div>
       <span class="status-badge ${STATUS_BADGE[ch.status]||'badge-fuera-servicio'}">
         ${STATUS_LABEL[ch.status]||'○ Fuera de Servicio'}
       </span>
     </div>
     <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+      <svg id="svg-ch-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
     </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
+    <div class="kpi-value ${off?'kpi-off':''}" id="kpi-ch-${ch.id}">${off ? DASH : '0 %'}</div>
     <div class="metrics">
-      ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
-      ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : 'c-normal')}
-      ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F',  off ? 'c-off' : 'c-normal')}
-      ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', off ? 'c-off' : 'c-warning')}
-      ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', off ? 'c-off' : 'c-warning')}
+      ${mr('Carga',      off?DASH:ch.carga+' %',    off?'c-off':colorClass(ch.carga))}
+      ${mr('T° Salida',  off?DASH:ch.tempOut+' °F', off?'c-off':'c-normal')}
+      ${mr('T° Entrada', off?DASH:ch.tempIn+' °F',  off?'c-off':'c-normal')}
+      ${mr('P. Salida',  off?DASH:ch.presOut+' psi',off?'c-off':'c-warning')}
+      ${mr('P. Entrada', off?DASH:ch.presIn+' psi', off?'c-off':'c-warning')}
     </div>`;
 
   document.getElementById('grid-chillers').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch-${ch.id}`, '%');
-  if (!off) animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, false, delay);
+  const needle = buildGauge(document.getElementById(`svg-ch-${ch.id}`), `grad-ch-${ch.id}`, '%');
+  if (!off) animateNeedle(needle, document.getElementById(`kpi-ch-${ch.id}`), ch.carga, false, delay);
 }
 
+/* ══════════ RENDER COMPRESORES ══════════ */
 function renderCompresorCard(cp, delay=0) {
   const off = cp.status === 'fuera-servicio' || cp.status === 'standby';
+  const MAX_TEMP = 150;
   const card = document.createElement('div');
   card.className = `card ${STATUS_CARD[cp.status]||''}`.trim();
-  const MAX_TEMP = 150;
 
   card.innerHTML = `
     <div class="card-header">
-      <div>
-        <div class="card-title">${cp.name}</div>
-        <div class="card-sub">${cp.sub}</div>
-      </div>
+      <div><div class="card-title">${cp.name}</div><div class="card-sub">${cp.sub}</div></div>
       <span class="status-badge ${STATUS_BADGE[cp.status]||'badge-fuera-servicio'}">
         ${STATUS_LABEL[cp.status]||'○ Fuera de Servicio'}
       </span>
@@ -459,12 +446,12 @@ function renderCompresorCard(cp, delay=0) {
     <div class="gauge-wrap">
       <svg id="svg-cp-${cp.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
     </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
+    <div class="kpi-value ${off?'kpi-off':''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
     <div class="metrics">
-      ${metricRow('T° Carga',     off ? DASH : cp.tempCarga    + ' °F', off ? 'c-off' : tempClass(cp.tempCarga))}
-      ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', off ? 'c-off' : tempClass(cp.tempDescarga))}
-      ${metricRow('P. Carga',     off ? DASH : cp.presCarga    + ' psi', off ? 'c-off' : 'c-warning')}
-      ${metricRow('P. Descarga', off ? DASH : cp.presDescarga + ' psi', off ? 'c-off' : 'c-warning')}
+      ${mr('T° Carga',    off?DASH:cp.tempCarga+' °F',    off?'c-off':tempClass(cp.tempCarga))}
+      ${mr('T° Descarga', off?DASH:cp.tempDescarga+' °F', off?'c-off':tempClass(cp.tempDescarga))}
+      ${mr('P. Carga',    off?DASH:cp.presCarga+' psi',   off?'c-off':'c-warning')}
+      ${mr('P. Descarga', off?DASH:cp.presDescarga+' psi',off?'c-off':'c-warning')}
     </div>`;
 
   document.getElementById('grid-compresores').appendChild(card);
@@ -472,6 +459,7 @@ function renderCompresorCard(cp, delay=0) {
   if (!off) animateNeedleTemp(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, MAX_TEMP, delay);
 }
 
+/* ══════════ INIT ══════════ */
 async function init() {
   const statusEl = document.getElementById('update-status');
   const dot      = document.getElementById('sync-dot');
@@ -484,7 +472,7 @@ async function init() {
       fetchAllItemsFromBoard(CONFIG.BOARD_COMPRESORES)
     ]);
 
-    /* ── Render Chillers ── */
+    /* ── Chillers ── */
     const latestCH = new Map();
     chillerItems.forEach(item => {
       const name = item.name.trim().toUpperCase();
@@ -496,21 +484,20 @@ async function init() {
     const gridCH = document.getElementById('grid-chillers');
     gridCH.innerHTML = '';
     CONFIG.CHILLER_NAMES.forEach((name, i) => {
-      const item = latestCH.get(name);
-      if (!item) return;
-      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      const item = latestCH.get(name); if (!item) return;
+      const gv = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
       renderChillerCard({
         id: i, name, sub: CHILLER_SUB[name] || 'Equipo',
-        carga: getVal(CONFIG.COL_CH.CARGA),
-        tempOut: getVal(CONFIG.COL_CH.TEMP_OUT),
-        tempIn:  getVal(CONFIG.COL_CH.TEMP_IN),
-        presOut: getVal(CONFIG.COL_CH.PRES_OUT),
-        presIn:  getVal(CONFIG.COL_CH.PRES_IN),
+        carga:   gv(CONFIG.COL_CH.CARGA),
+        tempOut: gv(CONFIG.COL_CH.TEMP_OUT),
+        tempIn:  gv(CONFIG.COL_CH.TEMP_IN),
+        presOut: gv(CONFIG.COL_CH.PRES_OUT),
+        presIn:  gv(CONFIG.COL_CH.PRES_IN),
         status:  parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CH.STATUS)?.text)
       }, i * 80);
     });
 
-    /* ── Render Compresores ── */
+    /* ── Compresores ── */
     const latestCP = new Map();
     compresorItems.forEach(item => {
       const name = item.name.trim().toUpperCase();
@@ -521,35 +508,32 @@ async function init() {
 
     const gridCP = document.getElementById('grid-compresores');
     gridCP.innerHTML = '';
-
     CONFIG.COMPRESOR_NAMES.forEach((name, i) => {
-      const item = latestCP.get(name);
-      if (!item) return;
-      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      const item = latestCP.get(name); if (!item) return;
+      const gv = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
       renderCompresorCard({
-        id: 'cp' + i,
-        name,
-        sub: COMPRESOR_SUB[name] || 'Equipo',
-        tempCarga:    getVal(CONFIG.COL_CP.TEMP_CARGA),
-        tempDescarga: getVal(CONFIG.COL_CP.TEMP_DESCARGA),
-        presCarga:    getVal(CONFIG.COL_CP.PRES_CARGA),
-        presDescarga: getVal(CONFIG.COL_CP.PRES_DESCARGA),
+        id: 'cp' + i, name, sub: COMPRESOR_SUB[name] || 'Equipo',
+        tempCarga:    gv(CONFIG.COL_CP.TEMP_CARGA),
+        tempDescarga: gv(CONFIG.COL_CP.TEMP_DESCARGA),
+        presCarga:    gv(CONFIG.COL_CP.PRES_CARGA),
+        presDescarga: gv(CONFIG.COL_CP.PRES_DESCARGA),
         status:       parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CP.STATUS)?.text)
       }, i * 80);
     });
 
     const now = new Date();
     const pad = n => String(n).padStart(2,'0');
-    statusEl.textContent = ` ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    statusEl.textContent = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
     dot.className = 'sync-dot';
 
   } catch (err) {
     console.error(err);
-    statusEl.textContent = `Error de conexión`;
+    statusEl.textContent = 'Error de conexión';
     dot.className = 'sync-dot error';
   }
 }
 
+/* ── Tabs ── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
