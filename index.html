@@ -120,11 +120,10 @@
   .badge-standby        { background: #E6F0F9;              color: #004F9F; }
 
   /* ── GAUGE LAYOUT ── */
-  /* Desktop: single centered gauge */
   .gauges-row {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 0;
     margin: 4px 0 0;
   }
   .gauge-block {
@@ -189,13 +188,24 @@
     .content { padding: 0; }
     .tab-pane.active { padding: 16px; }
 
-    /* Two gauges side by side on mobile */
+    /* Two gauges side by side on mobile — clearly separated */
     .gauges-row {
-      gap: 0;
+      gap: 12px;
+      align-items: stretch;
+      margin: 8px 0 4px;
+    }
+    .gauge-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 6px 6px;
+      flex: 1;
+      min-width: 0;
     }
     .gauge-block .gauge-wrap svg {
       width: 100%;
     }
+    .gauge-label { display: block; }
     /* Hide the primary single KPI text on mobile (per-gauge KPI replaces it) */
     .kpi-main { display: none; }
   }
