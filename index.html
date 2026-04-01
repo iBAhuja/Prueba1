@@ -33,7 +33,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
-  /* ── TOPBAR ── */
   .topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -66,7 +65,6 @@
   .sync-dot.error { background: var(--danger); animation: none; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* ── CONTENT ── */
   .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
 
   .tab-nav {
@@ -82,11 +80,10 @@
   }
   .tab-btn.active { background: var(--primary); color: #fff; }
 
-  /* ── TAB NAV FIJO EN MÓVIL ── */
   @media (max-width: 768px) {
     .tab-nav {
       position: sticky;
-      top: 60px; /* altura del topbar */
+      top: 60px;
       z-index: 90;
       width: 100%;
       border-radius: 0;
@@ -100,18 +97,13 @@
       padding: 10px 12px;
       font-size: 13px;
     }
-    .content {
-      padding: 0;
-    }
-    .tab-pane.active {
-      padding: 16px;
-    }
+    .content { padding: 0; }
+    .tab-pane.active { padding: 16px; }
   }
 
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  /* ── GRID & CARDS ── */
   .grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
@@ -144,7 +136,6 @@
   .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
   .card-sub    { font-size: 11px; color: var(--text-secondary); }
 
-  /* ── BADGES ── */
   .status-badge {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
@@ -170,7 +161,6 @@
   .c-danger  { color: #B9251C; }
   .c-off     { color: var(--text-muted); }
 
-  /* ── LOADING ── */
   .loading-state {
     grid-column: 1/-1;
     display: flex; flex-direction: column; align-items: center;
@@ -218,9 +208,6 @@
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   CONFIG  (lógica original)
-   ═══════════════════════════════════════════════ */
 const CONFIG = {
   API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
   BOARD_ID:       '18403987245',
@@ -251,11 +238,9 @@ const STATIC_COMPRESORES = [
   { id:103, name:'COMP003', sub:'Aire Comprimido 03', tempCarga:0,   status:'fuera-servicio', presCarga:0   }
 ];
 
-/* ═══════════════════════════════════════════════
-   GAUGE SVG
-   ═══════════════════════════════════════════════ */
+/* ── GAUGE: dimensiones compactas ── */
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const G = { CX:115, CY:110, R_OUTER:90, R_INNER:60, R_NEEDLE:82 };
+const G = { CX:115, CY:85, R_OUTER:78, R_INNER:52, R_NEEDLE:70 };
 
 function pt(val, r) {
   const rad = (180 - (Math.min(val,100)/100)*180) * Math.PI/180;
@@ -282,7 +267,7 @@ function buildGauge(svg, gradId, unit='%') {
   svg.appendChild(svgEl('path',{ d:arcD, fill:`url(#${gradId})`, opacity:'0.85' }));
 
   [0,25,50,75,100].forEach(v => {
-    const p1=pt(v,R_OUTER+2), p2=pt(v,R_OUTER+9), pl=pt(v,R_OUTER+18);
+    const p1=pt(v,R_OUTER+2), p2=pt(v,R_OUTER+8), pl=pt(v,R_OUTER+16);
     svg.appendChild(svgEl('line',{ x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,stroke:'#C5C7D4','stroke-width':'1.5' }));
     const lbl = svgEl('text',{ x:pl.x,y:pl.y+4,'text-anchor':'middle','font-size':'8',fill:'#676879','font-family':'Inter','font-weight':'600' });
     lbl.textContent = v+unit; svg.appendChild(lbl);
@@ -290,8 +275,8 @@ function buildGauge(svg, gradId, unit='%') {
 
   const needle = svgEl('line',{ x1:CX,y1:CY,x2:CX-G.R_NEEDLE,y2:CY,stroke:'#323338','stroke-width':'2.5','stroke-linecap':'round' });
   svg.appendChild(needle);
-  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'10',fill:'#FFFFFF',stroke:'#E6E9EF','stroke-width':'2' }));
-  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'5', fill:'#004F9F' }));
+  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'9',fill:'#FFFFFF',stroke:'#E6E9EF','stroke-width':'2' }));
+  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'4', fill:'#004F9F' }));
   return needle;
 }
 
@@ -315,9 +300,6 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   }, delay);
 }
 
-/* ═══════════════════════════════════════════════
-   API MONDAY.COM  (lógica original: reintentos + paginación)
-   ═══════════════════════════════════════════════ */
 async function fetchMondayAPI(query, attempt=1) {
   try {
     const res = await fetch('https://api.monday.com/v2', {
@@ -364,7 +346,6 @@ async function fetchAllItems() {
   return allItems;
 }
 
-/* Parseo de estado completo (5 estados) */
 function parseStatus(raw='') {
   const s = raw.toLowerCase().trim();
   if (s.includes('operativo'))     return 'operativo';
@@ -374,9 +355,6 @@ function parseStatus(raw='') {
   return 'fuera-servicio';
 }
 
-/* ═══════════════════════════════════════════════
-   RENDER
-   ═══════════════════════════════════════════════ */
 const DASH = '—';
 
 const STATUS_CARD = {
@@ -424,7 +402,7 @@ function renderCard(ch, containerId, isChiller=true, delay=0) {
       </span>
     </div>
     <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="130" viewBox="0 0 230 130"></svg>
+      <svg id="svg-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
     </div>
     <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
     <div class="metrics">
@@ -458,9 +436,6 @@ function renderCard(ch, containerId, isChiller=true, delay=0) {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   INIT + AUTO-REFRESH
-   ═══════════════════════════════════════════════ */
 async function init() {
   const statusEl = document.getElementById('update-status');
   const dot      = document.getElementById('sync-dot');
@@ -478,7 +453,6 @@ async function init() {
         latestMap.set(name, item);
     });
 
-    /* ── Chillers ── */
     const gridCH = document.getElementById('grid-chillers');
     gridCH.innerHTML = '';
     CONFIG.CHILLER_NAMES.forEach((name, i) => {
@@ -498,7 +472,6 @@ async function init() {
       }, 'grid-chillers', true, i * 80);
     });
 
-    /* ── Compresores (estáticos) ── */
     const gridCP = document.getElementById('grid-compresores');
     gridCP.innerHTML = '';
     STATIC_COMPRESORES.forEach((cp, i) => renderCard(cp, 'grid-compresores', false, i * 80));
@@ -515,7 +488,6 @@ async function init() {
   }
 }
 
-/* ── Tabs ── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
