@@ -80,19 +80,6 @@
   }
   .tab-btn.active { background: var(--primary); color: #fff; }
 
-  @media (max-width: 768px) {
-    .tab-nav {
-      position: sticky; top: 60px; z-index: 90;
-      width: 100%; border-radius: 0;
-      border-left: none; border-right: none; border-top: none;
-      margin-bottom: 0; justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .tab-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
-    .content { padding: 0; }
-    .tab-pane.active { padding: 16px; }
-  }
-
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
@@ -132,10 +119,39 @@
   .badge-fuera-servicio { background: #F1F3F6;              color: #676879; }
   .badge-standby        { background: #E6F0F9;              color: #004F9F; }
 
-  .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
+  /* ── GAUGE LAYOUT ── */
+  /* Desktop: single centered gauge */
+  .gauges-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 4px 0 0;
+  }
+  .gauge-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  .gauge-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
   .gauge-wrap svg { max-width: 100%; height: auto; }
+
   .kpi-value  { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
   .kpi-off    { color: var(--text-muted); font-size: 22px; }
+
+  /* Mobile KPI inside gauge block */
+  .gauge-block .kpi-value {
+    font-size: 18px;
+    margin-top: -4px;
+    margin-bottom: 4px;
+  }
 
   .metrics { border-top: 1px solid var(--border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
   .mrow    { display: flex; justify-content: space-between; align-items: center; }
@@ -159,6 +175,47 @@
     border-radius: 50%; animation: spin .8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .tab-nav {
+      position: sticky; top: 60px; z-index: 90;
+      width: 100%; border-radius: 0;
+      border-left: none; border-right: none; border-top: none;
+      margin-bottom: 0; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .tab-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
+    .content { padding: 0; }
+    .tab-pane.active { padding: 16px; }
+
+    /* Two gauges side by side on mobile */
+    .gauges-row {
+      gap: 0;
+    }
+    .gauge-block .gauge-wrap svg {
+      width: 100%;
+    }
+    /* Hide the primary single KPI text on mobile (per-gauge KPI replaces it) */
+    .kpi-main { display: none; }
+  }
+
+  /* ── DESKTOP: hide per-gauge labels and show single KPI ── */
+  @media (min-width: 769px) {
+    /* On desktop show both gauge blocks but they look like one centered gauge */
+    .gauges-row {
+      justify-content: center;
+    }
+    /* Hide second gauge block on desktop for chiller (only carga) */
+    .gauge-block-secondary {
+      display: none;
+    }
+    /* Show main kpi below gauge */
+    .kpi-main { display: block; }
+    /* Hide per-block labels on desktop */
+    .gauge-label { display: none; }
+    .gauge-block .kpi-value { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -408,6 +465,11 @@ function metricRow(label, value, cls='') {
   return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${value}</span></div>`;
 }
 
+/*
+ * CHILLER CARD
+ * Desktop: single gauge (Carga) + kpi-main below it
+ * Mobile:  two gauges side by side (Carga | T° Salida) — each with its own mini KPI
+ */
 function renderChillerCard(ch, delay=0) {
   const off = ch.status === 'fuera-servicio' || ch.status === 'standby';
   const card = document.createElement('div');
@@ -423,10 +485,30 @@ function renderChillerCard(ch, delay=0) {
         ${STATUS_LABEL[ch.status]||'○ Fuera de Servicio'}
       </span>
     </div>
-    <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+
+    <div class="gauges-row">
+      <!-- Primary gauge: Carga -->
+      <div class="gauge-block">
+        <div class="gauge-label">Carga</div>
+        <div class="gauge-wrap">
+          <svg id="svg-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+        </div>
+        <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
+      </div>
+
+      <!-- Secondary gauge: T° Salida (visible on mobile only) -->
+      <div class="gauge-block gauge-block-secondary">
+        <div class="gauge-label">T° Salida</div>
+        <div class="gauge-wrap">
+          <svg id="svg-${ch.id}-b" width="230" height="100" viewBox="0 0 230 100"></svg>
+        </div>
+        <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}-b">${off ? DASH : '0 °F'}</div>
+      </div>
     </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
+
+    <!-- Main KPI shown on desktop only -->
+    <div class="kpi-value kpi-main ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}-main">${off ? DASH : '0%'}</div>
+
     <div class="metrics">
       ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
       ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : 'c-normal')}
@@ -436,10 +518,27 @@ function renderChillerCard(ch, delay=0) {
     </div>`;
 
   document.getElementById('grid-chillers').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch-${ch.id}`, '%');
-  if (!off) animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, false, delay);
+
+  // Primary gauge (Carga) — shown on both desktop and mobile
+  const needleA = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch-${ch.id}`, '%');
+  // Secondary gauge (T° Salida) — shown on mobile only but built regardless
+  const needleB = buildGauge(document.getElementById(`svg-${ch.id}-b`), `grad-ch-${ch.id}-b`, '°F');
+
+  if (!off) {
+    const MAX_TEMP = 150;
+    // Desktop KPI (kpi-main mirrors the gauge-block kpi)
+    animateNeedle(needleA, document.getElementById(`kpi-${ch.id}`), ch.carga, false, delay);
+    animateNeedle({ setAttribute: ()=>{} }, document.getElementById(`kpi-${ch.id}-main`), ch.carga, false, delay);
+    // Mobile secondary gauge: T° Salida
+    animateNeedleTemp(needleB, document.getElementById(`kpi-${ch.id}-b`), ch.tempOut, MAX_TEMP, delay + 60);
+  }
 }
 
+/*
+ * COMPRESOR CARD
+ * Desktop: single gauge (T° Carga) + kpi-main
+ * Mobile:  two gauges side by side (T° Carga | T° Descarga)
+ */
 function renderCompresorCard(cp, delay=0) {
   const off = cp.status === 'fuera-servicio' || cp.status === 'standby';
   const card = document.createElement('div');
@@ -456,10 +555,30 @@ function renderCompresorCard(cp, delay=0) {
         ${STATUS_LABEL[cp.status]||'○ Fuera de Servicio'}
       </span>
     </div>
-    <div class="gauge-wrap">
-      <svg id="svg-cp-${cp.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+
+    <div class="gauges-row">
+      <!-- Primary gauge: T° Carga -->
+      <div class="gauge-block">
+        <div class="gauge-label">T° Carga</div>
+        <div class="gauge-wrap">
+          <svg id="svg-cp-${cp.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
+        </div>
+        <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
+      </div>
+
+      <!-- Secondary gauge: T° Descarga (visible on mobile only) -->
+      <div class="gauge-block gauge-block-secondary">
+        <div class="gauge-label">T° Descarga</div>
+        <div class="gauge-wrap">
+          <svg id="svg-cp-${cp.id}-b" width="230" height="100" viewBox="0 0 230 100"></svg>
+        </div>
+        <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}-b">${off ? DASH : '0 °F'}</div>
+      </div>
     </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
+
+    <!-- Desktop KPI -->
+    <div class="kpi-value kpi-main ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}-main">${off ? DASH : '0 °F'}</div>
+
     <div class="metrics">
       ${metricRow('T° Carga',     off ? DASH : cp.tempCarga    + ' °F', off ? 'c-off' : tempClass(cp.tempCarga))}
       ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', off ? 'c-off' : tempClass(cp.tempDescarga))}
@@ -468,8 +587,15 @@ function renderCompresorCard(cp, delay=0) {
     </div>`;
 
   document.getElementById('grid-compresores').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
-  if (!off) animateNeedleTemp(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, MAX_TEMP, delay);
+
+  const needleA = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
+  const needleB = buildGauge(document.getElementById(`svg-cp-${cp.id}-b`), `grad-cp-${cp.id}-b`, '°F');
+
+  if (!off) {
+    animateNeedleTemp(needleA, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, MAX_TEMP, delay);
+    animateNeedleTemp({ setAttribute: ()=>{} }, document.getElementById(`kpi-cp-${cp.id}-main`), cp.tempCarga, MAX_TEMP, delay);
+    animateNeedleTemp(needleB, document.getElementById(`kpi-cp-${cp.id}-b`), cp.tempDescarga, MAX_TEMP, delay + 60);
+  }
 }
 
 async function init() {
