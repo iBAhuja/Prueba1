@@ -7,32 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --primary:       #004F9F;
-    --primary-dark:  #003D7C;
-    --primary-light: #E6F0F9;
-    --success:       #00A859;
-    --success-bg:    #E6F6EF;
-    --warning:       #FFB800;
-    --warning-bg:    #FFF8E6;
-    --danger:        #D93025;
-    --danger-bg:     #FCEAE9;
-    --neutral:       #676879;
-    --neutral-light: #C5C7D4;
+    --primary:        #004F9F;
+    --primary-dark:   #003D7C;
+    --primary-light:  #E6F0F9;
+    --success:        #00A859;
+    --success-bg:     #E6F6EF;
+    --warning:        #FFB800;
+    --warning-bg:     #FFF8E6;
+    --danger:         #D93025;
+    --danger-bg:      #FCEAE9;
+    --neutral:        #676879;
+    --neutral-light:  #C5C7D4;
     --bg:             #F9FAFB;
-    --surface:       #FFFFFF;
-    --border:        #E6E9EF;
-    --text-primary:  #323338;
-    --text-secondary:#676879;
-    --text-muted:    #C5C7D4;
-    --font:          'Inter', sans-serif;
-    --radius:        12px;
-    --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
-    --shadow-hover:  0 8px 24px rgba(0,79,159,0.14);
+    --surface:        #FFFFFF;
+    --border:         #E6E9EF;
+    --text-primary:   #323338;
+    --text-secondary: #676879;
+    --text-muted:     #C5C7D4;
+    --font:           'Inter', sans-serif;
+    --radius:         12px;
+    --shadow-sm:      0 1px 4px rgba(0,0,0,0.06);
+    --shadow-hover:   0 8px 24px rgba(0,79,159,0.14);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); font-family: var(--font); color: var(--text-primary); min-height: 100vh; }
 
+  /* ── Topbar ── */
   .topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -58,15 +59,14 @@
     border-radius: 20px; padding: 5px 12px;
     font-size: 11px; font-weight: 500; color: var(--text-secondary);
   }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--success); animation: blink 2s infinite;
-  }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: blink 2s infinite; }
   .sync-dot.error { background: var(--danger); animation: none; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+  /* ── Layout ── */
   .content { max-width: 1600px; margin: 0 auto; padding: 24px; }
 
+  /* ── Tabs ── */
   .tab-nav {
     display: flex; gap: 4px; margin-bottom: 24px;
     background: var(--surface); border: 1px solid var(--border);
@@ -96,20 +96,8 @@
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
 
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-  }
-
-  @media (max-width: 768px) {
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .card { padding: 12px 10px 10px; }
-    .card-title { font-size: 12px; }
-    .card-sub   { font-size: 10px; }
-    .kpi-value  { font-size: 20px; margin-top: -4px; margin-bottom: 8px; }
-    .kpi-off    { font-size: 18px; }
-    .mlabel     { font-size: 10px; }
-    .mval       { font-size: 11px; }
-  }
+  /* ── Grid & Cards ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
   .card {
     background: var(--surface); border-radius: var(--radius);
@@ -121,16 +109,17 @@
     content: ''; position: absolute; top: 0; left: 0; bottom: 0;
     width: 4px; background: var(--primary);
   }
-  .card.card-off::before    { background: var(--neutral-light); }
-  .card.card-warn::before   { background: var(--warning); }
-  .card.card-alarm::before  { background: #FF8C00; }
-  .card.card-fail::before   { background: var(--danger); }
+  .card.card-off::before   { background: var(--neutral-light); }
+  .card.card-warn::before  { background: var(--warning); }
+  .card.card-alarm::before { background: #FF8C00; }
+  .card.card-fail::before  { background: var(--danger); }
   .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
   .card-header { display: flex; justify-content: space-between; align-items: flex-start; text-align: left; margin-bottom: 10px; }
   .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
   .card-sub    { font-size: 11px; color: var(--text-secondary); }
 
+  /* ── Badges ── */
   .status-badge {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
@@ -138,15 +127,18 @@
   }
   .badge-operativo      { background: var(--success-bg);  color: #007D43; }
   .badge-carga-parcial  { background: var(--warning-bg);  color: #BF8900; }
-  .badge-alarma-activa  { background: #FFF0E0;              color: #C05800; }
-  .badge-falla-critica  { background: var(--danger-bg);    color: #B9251C; }
-  .badge-fuera-servicio { background: #F1F3F6;              color: #676879; }
+  .badge-alarma-activa  { background: #FFF0E0;             color: #C05800; }
+  .badge-falla-critica  { background: var(--danger-bg);   color: #B9251C; }
+  .badge-fuera-servicio { background: #F1F3F6;             color: #676879; }
+  .badge-standby        { background: #E6F0F9;             color: #004F9F; }
 
+  /* ── Gauge & KPI ── */
   .gauge-wrap { display: flex; justify-content: center; margin: 4px 0 0; }
   .gauge-wrap svg { max-width: 100%; height: auto; }
-  .kpi-value  { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
-  .kpi-off    { color: var(--text-muted); font-size: 22px; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: -6px; margin-bottom: 12px; letter-spacing: -1px; }
+  .kpi-off   { color: var(--text-muted); font-size: 22px; }
 
+  /* ── Metrics ── */
   .metrics { border-top: 1px solid var(--border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; text-align: left; }
   .mrow    { display: flex; justify-content: space-between; align-items: center; }
   .mlabel  { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
@@ -157,6 +149,7 @@
   .c-danger  { color: #B9251C; }
   .c-off     { color: var(--text-muted); }
 
+  /* ── Loading ── */
   .loading-state {
     grid-column: 1/-1;
     display: flex; flex-direction: column; align-items: center;
@@ -176,7 +169,7 @@
 <div class="topbar">
   <div class="topbar-inner">
     <div class="topbar-brand">
-      <div class="brand-icon">❄️</div>
+      <div class="brand-icon">🔧</div>
       <div class="brand-name">Mantenimiento <span>PDM</span></div>
     </div>
     <div class="sync-badge">
@@ -206,15 +199,18 @@
 </div>
 
 <script>
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
 const CONFIG = {
-  API_TOKEN:      'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
-  BOARD_CHILLERS: '18403987245',
-  BOARD_COMPRESORES: '18406608853',
-  REFRESH_MS:      60_000,
-  MAX_RETRIES:     3,
-  RETRY_DELAY_MS: 3_000,
-  CHILLER_NAMES:   ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
-  COMPRESOR_NAMES: ['COMP001','COMP002','COMP003'],
+  API_TOKEN:        'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYyMzQyMjcyOSwiYWFpIjoxMSwidWlkIjoxMDA3NjU5OSwiaWFkIjoiMjAyNi0wMi0xOVQxNjoxMjo1Ni4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NDQ3Njg5MSwicmduIjoidXNlMSJ9.nY2MXM-x6fb95m2BvxmhUFVMHLxHrJpnl8ZNyjcFfVA',
+  BOARD_CHILLERS:   '18403987245',
+  BOARD_COMPRESORES:'18406608853',
+  REFRESH_MS:        60_000,
+  MAX_RETRIES:        3,
+  RETRY_DELAY_MS:    3_000,
+  CHILLER_NAMES:    ['CH001','CH002','CH003','CH004','CH005','CH006','CH007','CH008','CH009','CH010'],
+  COMPRESOR_NAMES:  ['COMP001','COMP002','COMP003'],
   COL_CH: {
     CARGA:    'numeric_mm1h2wdq',
     TEMP_OUT: 'numeric_mm1fssgs',
@@ -224,82 +220,122 @@ const CONFIG = {
     STATUS:   'status',
   },
   COL_CP: {
-    STATUS:         'status',
+    STATUS:        'status',
     TEMP_CARGA:    'numeric_mm1zfxhc',
     TEMP_DESCARGA: 'numeric_mm1zwzac',
     PRES_CARGA:    'numeric_mm1zvqry',
     PRES_DESCARGA: 'numeric_mm1zmfy0',
-  }
+  },
 };
 
+// ─────────────────────────────────────────────
+// METADATA
+// ─────────────────────────────────────────────
 const CHILLER_SUB = {
   CH001:'Confort Oficinas', CH002:'Confort CR1/CR2', CH003:'Confort CR1/CR2',
   CH004:'Proceso CR2',      CH005:'Proceso CR3',     CH006:'Confort CR3',
   CH007:'Confort CR3',      CH008:'Confort CR4',     CH009:'Confort CR4',
-  CH010:'Proceso CR2'
+  CH010:'Proceso CR2',
 };
 
 const COMPRESOR_SUB = {
-  COMP001:'Compresor CR1', 
-  COMP002:'Compresor CR3', 
-  COMP003:'Compresor CR4'
+  COMP001:'Compresor CR1',
+  COMP002:'Compresor CR3',
+  COMP003:'Compresor CR4',
 };
 
-/* ── GAUGE ── */
+const STATUS_META = {
+  'operativo':      { card: '',           badge: 'badge-operativo',      label: '● Operativo' },
+  'carga-parcial':  { card: 'card-warn',  badge: 'badge-carga-parcial',  label: '◐ Carga Parcial' },
+  'alarma-activa':  { card: 'card-alarm', badge: 'badge-alarma-activa',  label: '⚠ Alarma Activa' },
+  'falla-critica':  { card: 'card-fail',  badge: 'badge-falla-critica',  label: '✕ Falla Crítica' },
+  'fuera-servicio': { card: 'card-off',   badge: 'badge-fuera-servicio', label: '○ Fuera de Servicio' },
+  'standby':        { card: 'card-off',   badge: 'badge-standby',        label: '💤 Standby' },
+};
+
+const FALLBACK_STATUS = STATUS_META['fuera-servicio'];
+const DASH = '—';
+const GAUGE_ANIM_DURATION_MS = 1200;
+const COMPRESOR_MAX_TEMP = 150;
+
+// ─────────────────────────────────────────────
+// GAUGE
+// ─────────────────────────────────────────────
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const G = { CX:115, CY:85, R_OUTER:78, R_INNER:52, R_NEEDLE:70 };
 
-function pt(val, r) {
-  const rad = (180 - (Math.min(val,100)/100)*180) * Math.PI/180;
-  return { x: G.CX + r*Math.cos(rad), y: G.CY - r*Math.sin(rad) };
+function gaugePoint(pct, r) {
+  const rad = (180 - (Math.min(pct, 100) / 100) * 180) * Math.PI / 180;
+  return { x: G.CX + r * Math.cos(rad), y: G.CY - r * Math.sin(rad) };
 }
+
 function svgEl(tag, attrs) {
   const el = document.createElementNS(SVG_NS, tag);
-  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
   return el;
 }
 
-function buildGauge(svg, gradId, unit='%') {
+function buildGauge(svg, gradId, unit = '%') {
   const { CX, CY, R_OUTER, R_INNER } = G;
-  const defs = document.createElementNS(SVG_NS,'defs');
-  const grad = svgEl('linearGradient',{ id:gradId, x1:'0%', y1:'0%', x2:'100%', y2:'0%' });
-  [{ o:'0%', c:'#00A859' },{ o:'55%', c:'#FFB800' },{ o:'100%', c:'#D93025' }].forEach(s =>
-    grad.appendChild(svgEl('stop',{ offset:s.o, 'stop-color':s.c }))
-  );
-  defs.appendChild(grad); svg.appendChild(defs);
 
-  const o1=pt(0,R_OUTER), o2=pt(100,R_OUTER), i1=pt(0,R_INNER), i2=pt(100,R_INNER);
+  // Gradient definition
+  const defs = document.createElementNS(SVG_NS, 'defs');
+  const grad = svgEl('linearGradient', { id: gradId, x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
+  [{ o: '0%', c: '#00A859' }, { o: '55%', c: '#FFB800' }, { o: '100%', c: '#D93025' }]
+    .forEach(s => grad.appendChild(svgEl('stop', { offset: s.o, 'stop-color': s.c })));
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  // Arc path (shared between background and gradient fill)
+  const o1 = gaugePoint(0, R_OUTER), o2 = gaugePoint(100, R_OUTER);
+  const i1 = gaugePoint(0, R_INNER), i2 = gaugePoint(100, R_INNER);
   const arcD = `M ${o1.x} ${o1.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${o2.x} ${o2.y} L ${i2.x} ${i2.y} A ${R_INNER} ${R_INNER} 0 0 0 ${i1.x} ${i1.y} Z`;
-  svg.appendChild(svgEl('path',{ d:arcD, fill:'#F5F6FA', stroke:'#E6E9EF', 'stroke-width':'1' }));
-  svg.appendChild(svgEl('path',{ d:arcD, fill:`url(#${gradId})`, opacity:'0.85' }));
 
-  [0,25,50,75,100].forEach(v => {
-    const p1=pt(v,R_OUTER+2), p2=pt(v,R_OUTER+8), pl=pt(v,R_OUTER+16);
-    svg.appendChild(svgEl('line',{ x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,stroke:'#C5C7D4','stroke-width':'1.5' }));
-    const lbl = svgEl('text',{ x:pl.x,y:pl.y+4,'text-anchor':'middle','font-size':'8',fill:'#676879','font-family':'Inter','font-weight':'600' });
-    lbl.textContent = v+unit; svg.appendChild(lbl);
+  svg.appendChild(svgEl('path', { d: arcD, fill: '#F5F6FA', stroke: '#E6E9EF', 'stroke-width': '1' }));
+  svg.appendChild(svgEl('path', { d: arcD, fill: `url(#${gradId})`, opacity: '0.85' }));
+
+  // Tick marks and labels
+  [0, 25, 50, 75, 100].forEach(v => {
+    const p1 = gaugePoint(v, R_OUTER + 2), p2 = gaugePoint(v, R_OUTER + 8), pl = gaugePoint(v, R_OUTER + 16);
+    svg.appendChild(svgEl('line', { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, stroke: '#C5C7D4', 'stroke-width': '1.5' }));
+    const lbl = svgEl('text', { x: pl.x, y: pl.y + 4, 'text-anchor': 'middle', 'font-size': '8', fill: '#676879', 'font-family': 'Inter', 'font-weight': '600' });
+    lbl.textContent = v + unit;
+    svg.appendChild(lbl);
   });
 
-  const needle = svgEl('line',{ x1:CX,y1:CY,x2:CX-G.R_NEEDLE,y2:CY,stroke:'#323338','stroke-width':'2.5','stroke-linecap':'round' });
+  // Needle + pivot
+  const needle = svgEl('line', { x1: CX, y1: CY, x2: CX - G.R_NEEDLE, y2: CY, stroke: '#323338', 'stroke-width': '2.5', 'stroke-linecap': 'round' });
   svg.appendChild(needle);
-  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'9',fill:'#FFFFFF',stroke:'#E6E9EF','stroke-width':'2' }));
-  svg.appendChild(svgEl('circle',{ cx:CX,cy:CY,r:'4', fill:'#004F9F' }));
+  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '9', fill: '#FFFFFF', stroke: '#E6E9EF', 'stroke-width': '2' }));
+  svg.appendChild(svgEl('circle', { cx: CX, cy: CY, r: '4', fill: '#004F9F' }));
+
   return needle;
 }
 
-function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+/**
+ * Animates gauge needle and KPI label.
+ * @param {SVGLineElement} needle
+ * @param {HTMLElement}    kpiEl
+ * @param {number}         targetPct   - 0–100 gauge position
+ * @param {Function}       formatValue - (progress 0–1) => display string
+ * @param {Function}       colorValue  - (progress 0–1) => CSS color string
+ * @param {number}         delay
+ */
+function animateGauge(needle, kpiEl, targetPct, formatValue, colorValue, delay = 0) {
   setTimeout(() => {
     const start = performance.now();
     function frame(now) {
-      const t = Math.min((now-start)/1200, 1);
-      const ease = 1 - Math.pow(1-t, 3);
-      const cur = ease * targetVal;
-      const p = pt(cur, G.R_NEEDLE);
+      const t = Math.min((now - start) / GAUGE_ANIM_DURATION_MS, 1);
+      const progress = easeOut(t);
+      const curPct = progress * targetPct;
+      const p = gaugePoint(curPct, G.R_NEEDLE);
       needle.setAttribute('x2', p.x);
       needle.setAttribute('y2', p.y);
       if (kpiEl) {
-        kpiEl.textContent = Math.round(cur) + (isTemp ? ' °F' : ' %');
-        kpiEl.style.color  = cur > 85 ? '#D93025' : cur > 65 ? '#BF8900' : '#007D43';
+        kpiEl.textContent = formatValue(progress);
+        kpiEl.style.color  = colorValue(curPct);
       }
       if (t < 1) requestAnimationFrame(frame);
     }
@@ -307,48 +343,52 @@ function animateNeedle(needle, kpiEl, targetVal, isTemp=false, delay=0) {
   }, delay);
 }
 
-function animateNeedleTemp(needle, kpiEl, targetTemp, maxTemp, delay=0) {
+function loadColor(pct) {
+  return pct > 85 ? '#D93025' : pct > 65 ? '#BF8900' : '#007D43';
+}
+
+function animateLoadGauge(needle, kpiEl, targetLoad, delay = 0) {
+  animateGauge(
+    needle, kpiEl, targetLoad,
+    progress => Math.round(progress * targetLoad) + ' %',
+    loadColor,
+    delay
+  );
+}
+
+function animateTempGauge(needle, kpiEl, targetTemp, maxTemp, delay = 0) {
   const targetPct = Math.min((targetTemp / maxTemp) * 100, 100);
-  setTimeout(() => {
-    const start = performance.now();
-    function frame(now) {
-      const t = Math.min((now-start)/1200, 1);
-      const ease = 1 - Math.pow(1-t, 3);
-      const curPct = ease * targetPct;
-      const curTemp = Math.round(ease * targetTemp);
-      const p = pt(curPct, G.R_NEEDLE);
-      needle.setAttribute('x2', p.x);
-      needle.setAttribute('y2', p.y);
-      if (kpiEl) {
-        kpiEl.textContent = curTemp + ' °F';
-        kpiEl.style.color = curPct > 80 ? '#D93025' : curPct > 55 ? '#BF8900' : '#007D43';
-      }
-      if (t < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }, delay);
+  animateGauge(
+    needle, kpiEl, targetPct,
+    progress => Math.round(progress * targetTemp) + ' °F',
+    pct => pct > 80 ? '#D93025' : pct > 55 ? '#BF8900' : '#007D43',
+    delay
+  );
 }
 
-async function fetchMondayAPI(query, attempt=1) {
+// ─────────────────────────────────────────────
+// API
+// ─────────────────────────────────────────────
+async function fetchMondayAPI(query, attempt = 1) {
   try {
     const res = await fetch('https://api.monday.com/v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': CONFIG.API_TOKEN,
-        'API-Version':   '2023-10'
+        'API-Version':   '2023-10',
       },
-      body: JSON.stringify({ query })
+      body: JSON.stringify({ query }),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     const data = await res.json();
-    if (data.errors) throw new Error(data.errors.map(e=>e.message).join(', '));
+    if (data.errors) throw new Error(data.errors.map(e => e.message).join(', '));
     if (!data.data)  throw new Error('Respuesta inesperada de la API.');
     return data;
   } catch (err) {
     if (attempt < CONFIG.MAX_RETRIES) {
       await new Promise(r => setTimeout(r, CONFIG.RETRY_DELAY_MS));
-      return fetchMondayAPI(query, attempt+1);
+      return fetchMondayAPI(query, attempt + 1);
     }
     throw err;
   }
@@ -375,195 +415,228 @@ async function fetchAllItemsFromBoard(boardId) {
   return allItems;
 }
 
-function parseStatus(raw='') {
+/**
+ * From a list of items, keep only the most recent entry per known name.
+ */
+function getLatestByName(items, knownNames) {
+  const latest = new Map();
+  for (const item of items) {
+    const name = item.name.trim().toUpperCase();
+    if (!knownNames.includes(name)) continue;
+    const existing = latest.get(name);
+    if (!existing || new Date(item.created_at) > new Date(existing.created_at))
+      latest.set(name, item);
+  }
+  return latest;
+}
+
+// ─────────────────────────────────────────────
+// PARSING HELPERS
+// ─────────────────────────────────────────────
+function parseStatus(raw = '') {
   const s = raw.toLowerCase().trim();
   if (s.includes('operativo'))     return 'operativo';
   if (s.includes('carga parcial')) return 'carga-parcial';
   if (s.includes('alarma'))        return 'alarma-activa';
   if (s.includes('falla'))         return 'falla-critica';
+  if (s.includes('standby'))       return 'standby';
   return 'fuera-servicio';
 }
 
-const DASH = '—';
-const STATUS_CARD = {
-  'operativo':      '',
-  'carga-parcial':  'card-warn',
-  'alarma-activa':  'card-alarm',
-  'falla-critica':  'card-fail',
-  'fuera-servicio': 'card-off',
-};
-const STATUS_BADGE = {
-  'operativo':      'badge-operativo',
-  'carga-parcial':  'badge-carga-parcial',
-  'alarma-activa':  'badge-alarma-activa',
-  'falla-critica':  'badge-falla-critica',
-  'fuera-servicio': 'badge-fuera-servicio',
-};
-const STATUS_LABEL = {
-  'operativo':      '● Operativo',
-  'carga-parcial':  '◐ Carga Parcial',
-  'alarma-activa':  '⚠ Alarma Activa',
-  'falla-critica':  '✕ Falla Crítica',
-  'fuera-servicio': '○ Fuera de Servicio',
-};
+function getColumnValue(item, colId) {
+  return parseFloat(item.column_values.find(c => c.id === colId)?.text?.replace(/[^\d.-]/g, '')) || 0;
+}
 
-function colorClass(val) { return val > 80 ? 'c-danger' : val > 50 ? 'c-warning' : 'c-normal'; }
-function tempClass(v)    { return v > 110   ? 'c-danger' : 'c-normal'; }
+function getStatusText(item, colId) {
+  return item.column_values.find(c => c.id === colId)?.text ?? '';
+}
 
-function metricRow(label, value, cls='') {
+// ─────────────────────────────────────────────
+// RENDER HELPERS
+// ─────────────────────────────────────────────
+function colorClass(val)  { return val > 80 ? 'c-danger' : val > 50 ? 'c-warning' : 'c-normal'; }
+function tempClass(val)   { return val > 110 ? 'c-danger' : 'c-normal'; }
+function isOffline(status){ return status === 'fuera-servicio' || status === 'standby'; }
+
+function metricRow(label, value, cls = '') {
   return `<div class="mrow"><span class="mlabel">${label}</span><span class="mval ${cls}">${value}</span></div>`;
 }
 
-function renderChillerCard(ch, delay=0) {
-  const off = ch.status === 'fuera-servicio';
-  const card = document.createElement('div');
-  card.className = `card ${STATUS_CARD[ch.status]||''}`.trim();
-
-  card.innerHTML = `
-    <div class="card-header">
-      <div>
-        <div class="card-title">${ch.name}</div>
-        <div class="card-sub">${ch.sub}</div>
-      </div>
-      <span class="status-badge ${STATUS_BADGE[ch.status]||'badge-fuera-servicio'}">
-        ${STATUS_LABEL[ch.status]||'○ Fuera de Servicio'}
-      </span>
-    </div>
-    <div class="gauge-wrap">
-      <svg id="svg-${ch.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
-    </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-${ch.id}">${off ? DASH : '0%'}</div>
-    <div class="metrics">
-      ${metricRow('Carga',      off ? DASH : ch.carga   + ' %',   off ? 'c-off' : colorClass(ch.carga))}
-      ${metricRow('T° Salida',  off ? DASH : ch.tempOut + ' °F',  off ? 'c-off' : 'c-normal')}
-      ${metricRow('T° Entrada', off ? DASH : ch.tempIn  + ' °F',  off ? 'c-off' : 'c-normal')}
-      ${metricRow('P. Salida',  off ? DASH : ch.presOut + ' psi', off ? 'c-off' : 'c-warning')}
-      ${metricRow('P. Entrada', off ? DASH : ch.presIn  + ' psi', off ? 'c-off' : 'c-warning')}
-    </div>`;
-
-  document.getElementById('grid-chillers').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-${ch.id}`), `grad-ch-${ch.id}`, '%');
-  if (!off) animateNeedle(needle, document.getElementById(`kpi-${ch.id}`), ch.carga, false, delay);
+function offOrVal(off, value, cls) {
+  return off ? [DASH, 'c-off'] : [value, cls];
 }
 
-function renderCompresorCard(cp, delay=0) {
-  const off = cp.status === 'fuera-servicio';
-  const card = document.createElement('div');
-  card.className = `card ${STATUS_CARD[cp.status]||''}`.trim();
-  const MAX_TEMP = 150;
-
-  card.innerHTML = `
+function statusHeader(name, sub, status) {
+  const { badge, label } = STATUS_META[status] ?? FALLBACK_STATUS;
+  return `
     <div class="card-header">
       <div>
-        <div class="card-title">${cp.name}</div>
-        <div class="card-sub">${cp.sub}</div>
+        <div class="card-title">${name}</div>
+        <div class="card-sub">${sub}</div>
       </div>
-      <span class="status-badge ${STATUS_BADGE[cp.status]||'badge-fuera-servicio'}">
-        ${STATUS_LABEL[cp.status]||'○ Fuera de Servicio'}
-      </span>
-    </div>
-    <div class="gauge-wrap">
-      <svg id="svg-cp-${cp.id}" width="230" height="100" viewBox="0 0 230 100"></svg>
-    </div>
-    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="kpi-cp-${cp.id}">${off ? DASH : '0 °F'}</div>
-    <div class="metrics">
-      ${metricRow('T° Carga',     off ? DASH : cp.tempCarga    + ' °F', off ? 'c-off' : tempClass(cp.tempCarga))}
-      ${metricRow('T° Descarga', off ? DASH : cp.tempDescarga + ' °F', off ? 'c-off' : tempClass(cp.tempDescarga))}
-      ${metricRow('P. Carga',     off ? DASH : cp.presCarga    + ' psi', off ? 'c-off' : 'c-warning')}
-      ${metricRow('P. Descarga', off ? DASH : cp.presDescarga + ' psi', off ? 'c-off' : 'c-warning')}
+      <span class="status-badge ${badge}">${label}</span>
     </div>`;
-
-  document.getElementById('grid-compresores').appendChild(card);
-  const needle = buildGauge(document.getElementById(`svg-cp-${cp.id}`), `grad-cp-${cp.id}`, '°F');
-  if (!off) animateNeedleTemp(needle, document.getElementById(`kpi-cp-${cp.id}`), cp.tempCarga, MAX_TEMP, delay);
 }
 
+// ─────────────────────────────────────────────
+// RENDER: CHILLER
+// ─────────────────────────────────────────────
+function renderChillerCard(ch, gridEl, delay = 0) {
+  const off = isOffline(ch.status);
+  const { card: cardMod } = STATUS_META[ch.status] ?? FALLBACK_STATUS;
+  const svgId = `svg-ch-${ch.id}`;
+  const kpiId = `kpi-ch-${ch.id}`;
+
+  const card = document.createElement('div');
+  card.className = `card ${cardMod}`.trim();
+  card.innerHTML = `
+    ${statusHeader(ch.name, ch.sub, ch.status)}
+    <div class="gauge-wrap">
+      <svg id="${svgId}" width="230" height="100" viewBox="0 0 230 100"></svg>
+    </div>
+    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="${kpiId}">${off ? DASH : '0%'}</div>
+    <div class="metrics">
+      ${metricRow('Carga',      ...offOrVal(off, ch.carga    + ' %',   colorClass(ch.carga)))}
+      ${metricRow('T° Salida',  ...offOrVal(off, ch.tempOut  + ' °F',  'c-normal'))}
+      ${metricRow('T° Entrada', ...offOrVal(off, ch.tempIn   + ' °F',  'c-normal'))}
+      ${metricRow('P. Salida',  ...offOrVal(off, ch.presOut  + ' psi', 'c-warning'))}
+      ${metricRow('P. Entrada', ...offOrVal(off, ch.presIn   + ' psi', 'c-warning'))}
+    </div>`;
+
+  gridEl.appendChild(card);
+
+  const needle = buildGauge(document.getElementById(svgId), `grad-ch-${ch.id}`, '%');
+  if (!off) animateLoadGauge(needle, document.getElementById(kpiId), ch.carga, delay);
+}
+
+// ─────────────────────────────────────────────
+// RENDER: COMPRESOR
+// ─────────────────────────────────────────────
+function renderCompresorCard(cp, gridEl, delay = 0) {
+  const off = isOffline(cp.status);
+  const { card: cardMod } = STATUS_META[cp.status] ?? FALLBACK_STATUS;
+  const svgId = `svg-cp-${cp.id}`;
+  const kpiId = `kpi-cp-${cp.id}`;
+
+  const card = document.createElement('div');
+  card.className = `card ${cardMod}`.trim();
+  card.innerHTML = `
+    ${statusHeader(cp.name, cp.sub, cp.status)}
+    <div class="gauge-wrap">
+      <svg id="${svgId}" width="230" height="100" viewBox="0 0 230 100"></svg>
+    </div>
+    <div class="kpi-value ${off ? 'kpi-off' : ''}" id="${kpiId}">${off ? DASH : '0 °F'}</div>
+    <div class="metrics">
+      ${metricRow('T° Carga',     ...offOrVal(off, cp.tempCarga    + ' °F',  tempClass(cp.tempCarga)))}
+      ${metricRow('T° Descarga',  ...offOrVal(off, cp.tempDescarga + ' °F',  tempClass(cp.tempDescarga)))}
+      ${metricRow('P. Carga',     ...offOrVal(off, cp.presCarga    + ' psi', 'c-warning'))}
+      ${metricRow('P. Descarga',  ...offOrVal(off, cp.presDescarga + ' psi', 'c-warning'))}
+    </div>`;
+
+  gridEl.appendChild(card);
+
+  const needle = buildGauge(document.getElementById(svgId), `grad-cp-${cp.id}`, '°F');
+  if (!off) animateTempGauge(needle, document.getElementById(kpiId), cp.tempCarga, COMPRESOR_MAX_TEMP, delay);
+}
+
+// ─────────────────────────────────────────────
+// SYNC STATUS UI
+// ─────────────────────────────────────────────
+function setSyncOk() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('update-status').textContent =
+    ` ${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('sync-dot').className = 'sync-dot';
+}
+
+function setSyncError() {
+  document.getElementById('update-status').textContent = 'Error de conexión';
+  document.getElementById('sync-dot').className = 'sync-dot error';
+}
+
+function setSyncLoading() {
+  document.getElementById('update-status').textContent = 'Sincronizando...';
+  document.getElementById('sync-dot').className = 'sync-dot';
+}
+
+// ─────────────────────────────────────────────
+// MAIN INIT
+// ─────────────────────────────────────────────
 async function init() {
-  const statusEl = document.getElementById('update-status');
-  const dot      = document.getElementById('sync-dot');
-  statusEl.textContent = 'Sincronizando...';
-  dot.className = 'sync-dot';
+  setSyncLoading();
 
   try {
     const [chillerItems, compresorItems] = await Promise.all([
       fetchAllItemsFromBoard(CONFIG.BOARD_CHILLERS),
-      fetchAllItemsFromBoard(CONFIG.BOARD_COMPRESORES)
+      fetchAllItemsFromBoard(CONFIG.BOARD_COMPRESORES),
     ]);
 
-    /* ── Render Chillers ── */
-    const latestCH = new Map();
-    chillerItems.forEach(item => {
-      const name = item.name.trim().toUpperCase();
-      if (!CONFIG.CHILLER_NAMES.includes(name)) return;
-      if (!latestCH.has(name) || new Date(item.created_at) > new Date(latestCH.get(name).created_at))
-        latestCH.set(name, item);
-    });
-
-    const gridCH = document.getElementById('grid-chillers');
+    // ── Chillers ──
+    const latestCH  = getLatestByName(chillerItems, CONFIG.CHILLER_NAMES);
+    const gridCH    = document.getElementById('grid-chillers');
     gridCH.innerHTML = '';
+
     CONFIG.CHILLER_NAMES.forEach((name, i) => {
       const item = latestCH.get(name);
       if (!item) return;
-      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      const col = CONFIG.COL_CH;
       renderChillerCard({
-        id: i, name, sub: CHILLER_SUB[name] || 'Equipo',
-        carga: getVal(CONFIG.COL_CH.CARGA),
-        tempOut: getVal(CONFIG.COL_CH.TEMP_OUT),
-        tempIn:  getVal(CONFIG.COL_CH.TEMP_IN),
-        presOut: getVal(CONFIG.COL_CH.PRES_OUT),
-        presIn:  getVal(CONFIG.COL_CH.PRES_IN),
-        status:  parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CH.STATUS)?.text)
-      }, i * 80);
+        id:      i,
+        name,
+        sub:     CHILLER_SUB[name] ?? 'Equipo',
+        carga:   getColumnValue(item, col.CARGA),
+        tempOut: getColumnValue(item, col.TEMP_OUT),
+        tempIn:  getColumnValue(item, col.TEMP_IN),
+        presOut: getColumnValue(item, col.PRES_OUT),
+        presIn:  getColumnValue(item, col.PRES_IN),
+        status:  parseStatus(getStatusText(item, col.STATUS)),
+      }, gridCH, i * 80);
     });
 
-    /* ── Render Compresores (Filtrados) ── */
-    const latestCP = new Map();
-    compresorItems.forEach(item => {
-      const name = item.name.trim().toUpperCase();
-      if (!CONFIG.COMPRESOR_NAMES.includes(name)) return;
-      if (!latestCP.has(name) || new Date(item.created_at) > new Date(latestCP.get(name).created_at))
-        latestCP.set(name, item);
-    });
-
-    const gridCP = document.getElementById('grid-compresores');
+    // ── Compresores ──
+    const latestCP  = getLatestByName(compresorItems, CONFIG.COMPRESOR_NAMES);
+    const gridCP    = document.getElementById('grid-compresores');
     gridCP.innerHTML = '';
 
     CONFIG.COMPRESOR_NAMES.forEach((name, i) => {
       const item = latestCP.get(name);
       if (!item) return;
-      const getVal = id => parseFloat(item.column_values.find(c=>c.id===id)?.text?.replace(/[^\d.-]/g,'')) || 0;
+      const col = CONFIG.COL_CP;
       renderCompresorCard({
-        id: 'cp' + i,
+        id:           'cp' + i,
         name,
-        sub: COMPRESOR_SUB[name] || 'Equipo',
-        tempCarga:    getVal(CONFIG.COL_CP.TEMP_CARGA),
-        tempDescarga: getVal(CONFIG.COL_CP.TEMP_DESCARGA),
-        presCarga:    getVal(CONFIG.COL_CP.PRES_CARGA),
-        presDescarga: getVal(CONFIG.COL_CP.PRES_DESCARGA),
-        status:       parseStatus(item.column_values.find(c=>c.id===CONFIG.COL_CP.STATUS)?.text)
-      }, i * 80);
+        sub:          COMPRESOR_SUB[name] ?? 'Equipo',
+        tempCarga:    getColumnValue(item, col.TEMP_CARGA),
+        tempDescarga: getColumnValue(item, col.TEMP_DESCARGA),
+        presCarga:    getColumnValue(item, col.PRES_CARGA),
+        presDescarga: getColumnValue(item, col.PRES_DESCARGA),
+        status:       parseStatus(getStatusText(item, col.STATUS)),
+      }, gridCP, i * 80);
     });
 
-    const now = new Date();
-    const pad = n => String(n).padStart(2,'0');
-    statusEl.textContent = ` ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-    dot.className = 'sync-dot';
+    setSyncOk();
 
   } catch (err) {
     console.error(err);
-    statusEl.textContent = `Error de conexión`;
-    dot.className = 'sync-dot error';
+    setSyncError();
   }
 }
 
+// ─────────────────────────────────────────────
+// TAB NAVIGATION
+// ─────────────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.onclick = () => {
+  btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn, .tab-pane').forEach(el => el.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(`pane-${btn.dataset.tab}`).classList.add('active');
-  };
+  });
 });
 
+// ─────────────────────────────────────────────
+// BOOTSTRAP
+// ─────────────────────────────────────────────
 init();
 setInterval(init, CONFIG.REFRESH_MS);
 </script>
